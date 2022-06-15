@@ -19,6 +19,7 @@ const i18nText = {
     allis: '都是',
     is: '是',
     isnot: '不是',
+    valid: '这是一个有效的三段论',
   },
   en: {
     title: "Generate syllogism",
@@ -38,6 +39,7 @@ const i18nText = {
     allis: ' ARE ',
     is: ' ARE ',
     isnot: ' ARE NOT ',
+    valid: 'This is a valid syllogism',
   }
 } as Record<string, Record<string, string>>
 

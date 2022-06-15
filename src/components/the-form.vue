@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="right">
-      <div class="argument">
+      <div class="argument" :class="validOne ? 'valid' : ''">
         <div class="premises">
           <proposition-view
             :propsition="majorTerm"
@@ -72,14 +72,19 @@
           />
         </div>
       </div>
+      <div class="valid-tip" v-if="validOne">
+        <el-icon color="#379110"><circle-check-filled  /></el-icon>
+        {{ validOne.form }}: {{ validOne.name }}, {{ i18n.valid }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { CircleCheckFilled } from '@element-plus/icons-vue'
 import { reactive } from 'vue'
 import PropositionView from './proposition.vue'
-import { getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType } from './syllogism'
+import { validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType } from './syllogism'
 import { i18n } from '../translate'
 
 const moodOptions = ['A', 'E', 'I', 'O']
@@ -128,6 +133,12 @@ const conclusionTerm = $computed<Proposition>(() => {
     predicate: form.major,
     subject: form.minor,
   }
+})
+
+const validOne = $computed(() => {
+  const key = `${form.mood.join('')}-${form.figure}`
+  const found = validSyllogisms.find(i => i.form === key)
+  return found || null
 })
 
 </script>
@@ -183,6 +194,22 @@ const conclusionTerm = $computed<Proposition>(() => {
       color: #aaa;
     }
   }
+}
+
+.argument {
+  padding: 20px;
+  border: 1px solid transparent;
+  transition: all .3s;
+  &.valid {
+    border: 1px solid #379110;
+    border-radius: 6px;
+    background: #ceffb9;
+  }
+}
+
+.valid-tip {
+  padding: 6px 20px;
+  border-radius: 4px;
 }
 </style>
 
