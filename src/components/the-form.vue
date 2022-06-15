@@ -152,8 +152,6 @@ const validOne = $computed(() => {
 
 .left {
   width: 460px;
-  display: flex;
-  align-items: center;
 }
 
 .moods {
@@ -168,7 +166,7 @@ const validOne = $computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 
@@ -203,7 +201,7 @@ const validOne = $computed(() => {
   &.valid {
     border: 1px solid #379110;
     border-radius: 6px;
-    background: #ceffb9;
+    background: #f3ffee;
   }
 }
 

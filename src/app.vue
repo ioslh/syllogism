@@ -8,7 +8,7 @@
       <the-form />
     </main>
     <footer>
-      <div>GitHub</div>
+      <div><a href="https://github.com/ioslh/syllogism-box">GitHub</a></div>
     </footer>
   </div>
 </template>
@@ -51,5 +51,15 @@ main {
   flex: 1;
   overflow: hidden;
   padding: 0 36px;
+}
+
+footer {
+  height: 60px;
+  text-align: center;
+  a {
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+  }
 }
 </style>
