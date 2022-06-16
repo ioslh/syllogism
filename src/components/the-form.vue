@@ -82,9 +82,9 @@
 
 <script lang="ts" setup>
 import { CircleCheckFilled } from '@element-plus/icons-vue'
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
 import PropositionView from './proposition.vue'
-import { validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType } from './syllogism'
+import { runFallacyCheck, validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType } from './syllogism'
 import { i18n } from '../translate'
 
 const moodOptions = ['A', 'E', 'I', 'O']
@@ -139,6 +139,11 @@ const validOne = $computed(() => {
   const key = `${form.mood.join('')}-${form.figure}`
   const found = validSyllogisms.find(i => i.form === key)
   return found || null
+})
+
+
+onMounted(() => {
+  runFallacyCheck()
 })
 
 </script>
