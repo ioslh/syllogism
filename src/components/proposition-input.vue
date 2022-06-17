@@ -1,5 +1,6 @@
 <template>
   <tr class="proposition">
+    <td class="mark">{{ mark }}</td>
     <td>
       <select
         @change="(e: any) => quantifier = e.target.value"
@@ -65,10 +66,10 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick } from 'vue';
 import { type Proposition, type PropositionType } from './syllogism'
 
 const props = defineProps<{
+  mark: string
   value: Proposition
   isConclusion?: boolean
   terms?: string[]
@@ -274,6 +275,12 @@ const onChangeConclusionPredicate = (e: any) => {
   .predicate, .subject {
     text-align: left;
   }
+}
+
+.mark {
+  font-size: 36px;
+  font-weight: bold;
+  color: #888;
 }
 
 .quantifier {

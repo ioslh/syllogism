@@ -4,27 +4,29 @@
       <tbody>
         <proposition-input
           v-model:value="premise1"
+          mark="∵"
         />
         <proposition-input
           v-model:value="premise2"
+          mark=""
         />
         <tr >
-          <td colspan="4" class="sep"><hr/></td>
+          <td colspan="5" class="sep"><hr/></td>
         </tr>
         <proposition-input
           v-model:value="conclusion"
           is-conclusion
           :terms="conclusionOptions"
+          mark="∴"
         />
       </tbody>
     </table>
-    <button @click="onSubmit">确定</button>
-  </div>
-
-  <div style="margin-top: 100px">
-    <p>{{ toText(premise1) }}</p>
-    <p>{{ toText(premise2) }}</p>
-    <p>{{ toText(conclusion) }}</p>
+    <div class="control">
+      <el-button @click="onSubmit" type="primary">确定</el-button>
+    </div>
+    <div class="error" v-if="err">
+      {{ reasons[err] }}
+    </div>
   </div>
 </template>
 
@@ -34,20 +36,26 @@ import PropositionInput from './proposition-input.vue'
 import { onMounted } from 'vue'
 
 const props = defineProps<{
-  value: Argument
+  argument: Argument
 }>()
 
-const emits = defineEmits(['update:value'])
+const emits = defineEmits(['update:argument'])
 
-const premise1 = $ref<Proposition>({
+let premise1 = $ref<Proposition>({
   subject: '程序员',
   predicate: '人',
   mood: 'A' as PropositionType
 })
 
-const premise2 = $ref<Proposition>({
+let premise2 = $ref<Proposition>({
   subject: 'C 程序员',
   predicate: '程序员',
+  mood: 'A' as PropositionType
+})
+
+let conclusion = $ref<Proposition>({
+  subject: 'C 程序员',
+  predicate: '人',
   mood: 'A' as PropositionType
 })
 
@@ -64,11 +72,16 @@ const conclusionOptions = $computed(() => {
   return []
 })
 
-const conclusion = $ref<Proposition>({
-  subject: 'C 程序员',
-  predicate: '人',
-  mood: 'A' as PropositionType
-})
+const reasons = {
+  INCOMPLETE: '三段论内容不完整',
+  PREMISE_REPEAT_TERM: '同一个前提中出现重复的词项',
+  CONCLUS_REPEAT_TERM: '结论中出现重复的词项',
+  TERMS_COUNT: '词项数量不是三项',
+  ILLEGAL: '三段论结构非法',
+  UNKNOWN_FIGURE: '无法确定三段论的格',
+} as Record<string, string>
+
+let err = $ref<string | undefined>()
 
 const onSubmit = (): Argument | undefined => {
   let p1m = premise1.mood
@@ -79,12 +92,23 @@ const onSubmit = (): Argument | undefined => {
   let p2p = premise2.predicate.trim()
   const cs = conclusion.subject.trim()
   const cp = conclusion.predicate.trim()
-  if (!(p1s && p1p && p2s && p2p && cs && cp)) return
-  if (p1s === p1p) return
-  if (p2s === p2p) return
-  if (cs === cp) return
+  if (!(p1s && p1p && p2s && p2p && cs && cp)) {
+    err = 'INCOMPLETE'
+    return
+  }
+  if (p1s === p1p || p2s === p2p) {
+    err = 'PREMISE_REPEAT_TERM'
+    return
+  }
+  if (cs === cp) {
+    err = 'CONCLUS_REPEAT_TERM'
+    return
+  }
   // 词项数量不为 3，非法三段论
-  if (new Set([p1s, p1p, p2s, p2p, cs, cp]).size !== 3) return
+  if (new Set([p1s, p1p, p2s, p2p, cs, cp]).size !== 3) {
+    err = 'TERMS_COUNT'
+    return
+  }
   // 转换三段论标准格式
   if (![p1s, p1p].includes(cp)) {
     const [ts, tp, tm] = [p1s, p1p, p1m]
@@ -111,17 +135,19 @@ const onSubmit = (): Argument | undefined => {
     // 两个前提中都没有出现结论中的词项，非法三段论
   }
   // 格无法确定
-  if (typeof figure === 'undefined') return
+  if (typeof figure === 'undefined') {
+    err = 'UNKNOWN_FIGURE'
+    return
+  }
 
   const arg = {
     major: cp,
     minor: cs,
     middle,
     figure,
-    mood: `${p1m}${p2m}${conclusion.mood}` as Mood
+    mood: [p1m, p2m, conclusion.mood],
   } as Argument
-  console.log(arg)
-  emits('update:value', arg)
+  emits('update:argument', arg)
 }
 
 const toText = (p: Proposition) => {
@@ -139,18 +165,35 @@ const toText = (p: Proposition) => {
   }
 }
 
-onMounted(() => [
-  // premise1
-  // premise2
-  // conclusion
-])
+onMounted(() => {
+  const { major, minor, middle, mood, figure } = props.argument
+  premise1 = {
+    subject: [1, 3].includes(figure) ? middle : major,
+    predicate: [1, 3].includes(figure) ? major : middle,
+    mood: mood[0]
+  }
+
+  premise2 = {
+    subject: [1, 2].includes(figure) ?  minor : middle,
+    predicate: [1, 2].includes(figure) ? middle : minor,
+    mood: mood[1],
+  }
+
+  conclusion = {
+    subject: minor,
+    predicate: major,
+    mood: mood[2],
+  }
+
+  err = undefined
+})
 </script>
 
 <style lang="less" scoped>
 
 .argument {
-  td {
-    padding: 0 4px;
+  :deep(td) {
+    padding: 6px 4px;
   }
   :deep(td:first-child) {
     padding-left: 20px;
@@ -159,7 +202,7 @@ onMounted(() => [
     padding-right: 20px;
   }
   td.sep {
-    padding: 4px 0;
+    padding: 10px 0;
     hr {
       border: none;
       border-top: 1px solid #ccc;
@@ -167,5 +210,16 @@ onMounted(() => [
   }
 }
 
+
+.control {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.error {
+  text-align: center;
+  color: #f00;
+  margin-top: 16px;
+}
 
 </style>

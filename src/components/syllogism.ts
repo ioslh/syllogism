@@ -30,7 +30,7 @@ export interface Proposition {
 }
 
 export interface Argument {
-  mood: Mood
+  mood: [PropositionType, PropositionType, PropositionType]
   figure: Figure
   major: string
   minor: string
@@ -251,7 +251,7 @@ export const fallacyCheck = (mood: Mood, figure: number, major: string, minor: s
   return []
 }
 
-export const predicates = [
+export const argumentAssert = [
   {
     fn: checkUndistributeMiddle,
     desc: '中项不周延谬误',
@@ -284,7 +284,7 @@ export const runFallacyCheck = () => {
         figures.forEach(figure => {
           const mood = `${major}${minor}${conclusion}`
           let allpassed = true
-          predicates.forEach(({ fn, desc }) => {
+          argumentAssert.forEach(({ fn, desc }) => {
             if (fn(mood as Mood, figure as Figure)) {
               allpassed = false
             }

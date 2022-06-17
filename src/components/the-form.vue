@@ -88,7 +88,7 @@
 import { onMounted, reactive } from 'vue'
 import PropositionView from './proposition.vue'
 import ArgumentInput from './argument-input.vue'
-import { predicates, runFallacyCheck, validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType, type Mood, type Figure, type Argument } from './syllogism'
+import { runFallacyCheck, validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType, type Mood, type Figure, type Argument } from './syllogism'
 import { i18n } from '../translate'
 
 const moodOptions = ['A', 'E', 'I', 'O']
@@ -146,11 +146,11 @@ const falacies = $computed<string[]>(() => {
   const text: string[] = []
   const mood = argument.mood
 
-  predicates.forEach(({ fn, desc }) => {
-    if (fn(mood as Mood, argument.figure as Figure)) {
-      text.push(desc)
-    }
-  })
+  // predicates.forEach(({ fn, desc }) => {
+  //   if (fn(mood as Mood, argument.figure as Figure)) {
+  //     text.push(desc)
+  //   }
+  // })
   return text
 })
 
