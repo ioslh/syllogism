@@ -5,12 +5,16 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    All: typeof import('./src/components/all.vue')['default']
     Appbackup: typeof import('./src/components/appbackup.vue')['default']
     Argument: typeof import('./src/components/argument.vue')['default']
     ArgumentInput: typeof import('./src/components/argument-input.vue')['default']
+    ArgumentShow: typeof import('./src/components/argument-show.vue')['default']
+    Card: typeof import('./src/components/card.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckboxButton: typeof import('element-plus/es')['ElCheckboxButton']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -19,11 +23,13 @@ declare module '@vue/runtime-core' {
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    Form: typeof import('./src/components/form.vue')['default']
     Proposition: typeof import('./src/components/proposition.vue')['default']
     PropositionInput: typeof import('./src/components/proposition-input.vue')['default']
     Stage: typeof import('./src/components/stage.vue')['default']
     Syllogism: typeof import('./src/components/Syllogism.vue')['default']
     TheForm: typeof import('./src/components/the-form.vue')['default']
+    TheStage: typeof import('./src/components/the-stage.vue')['default']
   }
 }
 

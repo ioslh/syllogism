@@ -18,13 +18,9 @@
         />
       </tbody>
     </table>
-    <button @click="onSubmit">确定</button>
-  </div>
-
-  <div style="margin-top: 100px">
-    <p>{{ toText(premise1) }}</p>
-    <p>{{ toText(premise2) }}</p>
-    <p>{{ toText(conclusion) }}</p>
+    <div class="control">
+      <el-button @click="onSubmit" type="primary">确定</el-button>
+    </div>
   </div>
 </template>
 
@@ -34,20 +30,26 @@ import PropositionInput from './proposition-input.vue'
 import { onMounted } from 'vue'
 
 const props = defineProps<{
-  value: Argument
+  argument: Argument
 }>()
 
-const emits = defineEmits(['update:value'])
+const emits = defineEmits(['update:argument'])
 
-const premise1 = $ref<Proposition>({
+let premise1 = $ref<Proposition>({
   subject: '程序员',
   predicate: '人',
   mood: 'A' as PropositionType
 })
 
-const premise2 = $ref<Proposition>({
+let premise2 = $ref<Proposition>({
   subject: 'C 程序员',
   predicate: '程序员',
+  mood: 'A' as PropositionType
+})
+
+let conclusion = $ref<Proposition>({
+  subject: 'C 程序员',
+  predicate: '人',
   mood: 'A' as PropositionType
 })
 
@@ -64,11 +66,7 @@ const conclusionOptions = $computed(() => {
   return []
 })
 
-const conclusion = $ref<Proposition>({
-  subject: 'C 程序员',
-  predicate: '人',
-  mood: 'A' as PropositionType
-})
+
 
 const onSubmit = (): Argument | undefined => {
   let p1m = premise1.mood
@@ -118,10 +116,9 @@ const onSubmit = (): Argument | undefined => {
     minor: cs,
     middle,
     figure,
-    mood: `${p1m}${p2m}${conclusion.mood}` as Mood
+    mood: [p1m, p2m, conclusion.mood],
   } as Argument
-  console.log(arg)
-  emits('update:value', arg)
+  emits('update:argument', arg)
 }
 
 const toText = (p: Proposition) => {
@@ -139,11 +136,26 @@ const toText = (p: Proposition) => {
   }
 }
 
-onMounted(() => [
-  // premise1
-  // premise2
-  // conclusion
-])
+onMounted(() => {
+  const { major, minor, middle, mood, figure } = props.argument
+  premise1 = {
+    subject: [1, 3].includes(figure) ? middle : major,
+    predicate: [1, 3].includes(figure) ? major : middle,
+    mood: mood[0]
+  }
+
+  premise2 = {
+    subject: [1, 2].includes(figure) ?  minor : middle,
+    predicate: [1, 2].includes(figure) ? middle : minor,
+    mood: mood[1],
+  }
+
+  conclusion = {
+    subject: minor,
+    predicate: major,
+    mood: mood[2],
+  }
+})
 </script>
 
 <style lang="less" scoped>
@@ -167,5 +179,10 @@ onMounted(() => [
   }
 }
 
+
+.control {
+  text-align: center;
+  margin-top: 20px;
+}
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="stage" :class="`language-${language}`">
+  <div class="syllogism" :class="`language-${language}`">
     <header>
       <h1>{{ i18n.title }}</h1>
       <div class="sub">{{ i18n.subtitle }}</div>
@@ -7,13 +7,17 @@
       <el-button link @click="language = (language === 'cn' ? 'en' : 'cn')">{{ i18n.language }}</el-button>
     </header>
     <main>
-      <the-form />
+      <card />
+      <!-- <all-arguments /> -->
+      <!-- <the-stage /> -->
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import TheForm from './components/the-form.vue'
+import TheStage from './components/stage.vue'
+import AllArguments from './components/all.vue'
+import Card from './components/card.vue'
 import { language, i18n } from './translate'
 </script>
 
@@ -24,10 +28,14 @@ import { language, i18n } from './translate'
   padding: 0;
   font-family: sans-serif;
 }
+
+div {
+  box-sizing: border-box;
+}
 </style>
 
-<style lang="less">
-.stage {
+<style scoped lang="less">
+.syllogism {
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -61,15 +69,5 @@ main {
   overflow: hidden;
   position: relative;
   width: 100%;
-}
-
-footer {
-  height: 60px;
-  text-align: center;
-  a {
-    text-decoration: none;
-    color: #666;
-    font-size: 14px;
-  }
 }
 </style>
