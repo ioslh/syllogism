@@ -6,14 +6,10 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Appbackup: typeof import('./src/components/appbackup.vue')['default']
-    Argument: typeof import('./src/components/argument.vue')['default']
     ArgumentInput: typeof import('./src/components/argument-input.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElCheckboxButton: typeof import('element-plus/es')['ElCheckboxButton']
-    ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
@@ -22,7 +18,6 @@ declare module '@vue/runtime-core' {
     Proposition: typeof import('./src/components/proposition.vue')['default']
     PropositionInput: typeof import('./src/components/proposition-input.vue')['default']
     Stage: typeof import('./src/components/stage.vue')['default']
-    Syllogism: typeof import('./src/components/Syllogism.vue')['default']
     TheForm: typeof import('./src/components/the-form.vue')['default']
   }
 }
