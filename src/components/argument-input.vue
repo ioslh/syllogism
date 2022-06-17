@@ -31,6 +31,13 @@
 <script lang="ts" setup>
 import { type Proposition, type PropositionType, type Argument, type Mood } from './syllogism'
 import PropositionInput from './proposition-input.vue'
+import { onMounted } from 'vue'
+
+const props = defineProps<{
+  value: Argument
+}>()
+
+const emits = defineEmits(['update:value'])
 
 const premise1 = $ref<Proposition>({
   subject: '程序员',
@@ -106,13 +113,15 @@ const onSubmit = (): Argument | undefined => {
   // 格无法确定
   if (typeof figure === 'undefined') return
 
-  return {
+  const arg = {
     major: cp,
     minor: cs,
     middle,
     figure,
     mood: `${p1m}${p2m}${conclusion.mood}` as Mood
   } as Argument
+  console.log(arg)
+  emits('update:value', arg)
 }
 
 const toText = (p: Proposition) => {
@@ -129,6 +138,12 @@ const toText = (p: Proposition) => {
     return `Some ${p.subject} is not ${p.predicate}`
   }
 }
+
+onMounted(() => [
+  // premise1
+  // premise2
+  // conclusion
+])
 </script>
 
 <style lang="less" scoped>

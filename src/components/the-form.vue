@@ -29,23 +29,23 @@
       <div class="falacies" v-if="falacies.length">
         <p v-for="f in falacies" :key="f">{{ f }}</p>
       </div> -->
-      <argument-input />
+      <argument-input v-model:value="argument" />
     </div>
     <div class="right">
       <div>
-        <el-form :model="form" label-width="120px">
+        <el-form :model="argument" label-width="120px">
           <el-form-item :label="i18n.major">
-            <el-input v-model="form.major" />
+            <el-input v-model="argument.major" />
           </el-form-item>
           <el-form-item :label="i18n.minor">
-            <el-input v-model="form.minor" />
+            <el-input v-model="argument.minor" />
           </el-form-item>
           <el-form-item :label="i18n.middle">
-            <el-input v-model="form.middle" />
+            <el-input v-model="argument.middle" />
           </el-form-item>
           <el-form-item :label="i18n.mood">
             <div class="moods">
-              <el-select v-model="form.mood[0]" size="small">
+              <el-select v-model="argument.mood[0]" size="small">
                 <el-option
                   v-for="m in moodOptions"
                   :key="m"
@@ -53,7 +53,7 @@
                   :value="m"
                 />
               </el-select>
-              <el-select v-model="form.mood[1]" size="small">
+              <el-select v-model="argument.mood[1]" size="small">
                 <el-option
                   v-for="m in moodOptions"
                   :key="m"
@@ -61,7 +61,7 @@
                   :value="m"
                 />
               </el-select>
-              <el-select v-model="form.mood[2]" size="small">
+              <el-select v-model="argument.mood[2]" size="small">
                 <el-option
                   v-for="m in moodOptions"
                   :key="m"
@@ -72,7 +72,7 @@
             </div>
           </el-form-item>
           <el-form-item :label="i18n.figure">
-            <el-radio-group v-model="form.figure">
+            <el-radio-group v-model="argument.figure">
               <el-radio-button v-for="item in figures" :key="item.label" :label="item.value">
                 {{ item.label }}
               </el-radio-button>
@@ -85,20 +85,19 @@
 </template>
 
 <script lang="ts" setup>
-import { CircleCheckFilled } from '@element-plus/icons-vue'
 import { onMounted, reactive } from 'vue'
 import PropositionView from './proposition.vue'
 import ArgumentInput from './argument-input.vue'
-import { predicates, runFallacyCheck, validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType, type Mood, type Figure } from './syllogism'
+import { predicates, runFallacyCheck, validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType, type Mood, type Figure, type Argument } from './syllogism'
 import { i18n } from '../translate'
 
 const moodOptions = ['A', 'E', 'I', 'O']
 
-const form = reactive({
+const argument = $ref<Argument>({
   major: '英雄',
   minor: '士兵',
   middle: '胆小鬼',
-  mood: ['E', 'I', 'O'],
+  mood: 'EIO',
   figure: 2,
 })
 
@@ -109,46 +108,46 @@ const figures = $computed(() => {
   }))
 })
 
-let majorType = $computed<PropositionType>(() => form.mood[0] as PropositionType)
-let minorType = $computed<PropositionType>(() => form.mood[1] as PropositionType)
-let conclusionType = $computed<PropositionType>(() => form.mood[2] as PropositionType)
+let majorType = $computed<PropositionType>(() => argument.mood[0] as PropositionType)
+let minorType = $computed<PropositionType>(() => argument.mood[1] as PropositionType)
+let conclusionType = $computed<PropositionType>(() => argument.mood[2] as PropositionType)
 
 const majorTerm = $computed<Proposition>(() => {
   return {
     mood: majorType,
-    subject: [1, 3].includes(form.figure) ? form.middle : form.major,
-    predicate: [1, 3].includes(form.figure) ? form.major : form.middle,
+    subject: [1, 3].includes(argument.figure) ? argument.middle : argument.major,
+    predicate: [1, 3].includes(argument.figure) ? argument.major : argument.middle,
   }
 })
 
 const minorTerm = $computed<Proposition>(() => {
   return {
     mood: minorType,
-    subject: [1, 2].includes(form.figure) ? form.minor : form.middle,
-    predicate: [1, 2].includes(form.figure) ? form.middle : form.minor,
+    subject: [1, 2].includes(argument.figure) ? argument.minor : argument.middle,
+    predicate: [1, 2].includes(argument.figure) ? argument.middle : argument.minor,
   }
 })
 
 const conclusionTerm = $computed<Proposition>(() => {
   return {
     mood: conclusionType,
-    predicate: form.major,
-    subject: form.minor,
+    predicate: argument.major,
+    subject: argument.minor,
   }
 })
 
 const validOne = $computed(() => {
-  const key = `${form.mood.join('')}-${form.figure}`
+  const key = `${argument.mood}-${argument.figure}`
   const found = validSyllogisms.find(i => i.form === key)
   return found || null
 })
 
 const falacies = $computed<string[]>(() => {
   const text: string[] = []
-  const mood = form.mood.join('')
+  const mood = argument.mood
 
   predicates.forEach(({ fn, desc }) => {
-    if (fn(mood as Mood, form.figure as Figure)) {
+    if (fn(mood as Mood, argument.figure as Figure)) {
       text.push(desc)
     }
   })
@@ -165,8 +164,9 @@ onMounted(() => {
 <style lang="less" scoped>
 .content {
   display: flex;
-  width: 100%;
   height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 .left {

@@ -59,7 +59,8 @@ header {
 main {
   flex: 1;
   overflow: hidden;
-  padding: 0 36px;
+  position: relative;
+  width: 100%;
 }
 
 footer {
