@@ -2,8 +2,20 @@
   <div class="stage">
     <div class="left">
       <div class="argument-wrapper">
-        <div class="editor">edit</div>
         <argument-show :argument="argument" />
+        <div class="control">
+          <el-button @click="showEditor = true" type="primary" link>修改</el-button>
+        </div>
+      </div>
+      <div class="state">
+        <div class="valid" v-if="validOne">
+          {{ validOne.form }}: {{ validOne.name }} 这是一个有效的三段论
+        </div>
+        <div class="invalid" v-else-if="fallacies.length">
+          {{ argument.mood.join('') }}-{{ argument.figure }}: 
+          这是一个无效三段论，违反了以下原则：
+          <p v-for="p in fallacies" :key="p">{{ p }}</p>
+        </div>
       </div>
 
     </div>
@@ -27,12 +39,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { Argument } from './syllogism'
+import type { Argument, Mood } from './syllogism'
+import { validSyllogisms, argumentAssert } from './syllogism'
 import TheForm from './form.vue'
 import ArgumentShow from './argument-show.vue'
 import ArgumentInput from './argument-input.vue'
 
-let showEditor = $ref(true)
+let showEditor = $ref(false)
 let argument = $ref<Argument>({
   major: '英雄',
   minor: '士兵',
@@ -45,6 +58,25 @@ const onArgumentEdit = (arg: Argument) => {
   showEditor = false
   argument = arg
 }
+
+
+
+const validOne = $computed(() => {
+  const key = `${argument.mood.join('')}-${argument.figure}`
+  const found = validSyllogisms.find(i => i.form === key)
+  return found || null
+})
+
+const fallacies = $computed(() => {
+  let err: string[] = []
+  argumentAssert.forEach(({ fn, desc }) => {
+    if (fn(argument.mood.join('') as Mood, argument.figure)) {
+      err.push(desc)
+    }
+  })
+  return err
+})
+
 
 </script>
 
@@ -68,8 +100,13 @@ const onArgumentEdit = (arg: Argument) => {
 .argument-wrapper {
   padding: 40px;
   border-radius: 10px;
+  .control {
+    opacity: 0;
+  }
   &:hover {
-    background: #fafafc;
+    .control {
+      opacity: 1;
+    }
   }
 }
 
@@ -79,6 +116,23 @@ const onArgumentEdit = (arg: Argument) => {
   align-items: center;
   justify-content: center;
   padding: 40px 0;
+}
+
+.valid {
+  text-align: center;
+  margin-top: 20px;
+  color: #099709;
+}
+
+.invalid {
+  text-align: center;
+  margin-top: 20px;
+  color: #f00;
+}
+
+.control {
+  height: 30px;
+  text-align: right;
 }
 
 .right {

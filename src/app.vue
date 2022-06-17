@@ -7,17 +7,17 @@
       <el-button link @click="language = (language === 'cn' ? 'en' : 'cn')">{{ i18n.language }}</el-button>
     </header>
     <main>
-      <card />
+      <!-- <card /> -->
       <!-- <all-arguments /> -->
-      <!-- <the-stage /> -->
+      <the-stage />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
 import TheStage from './components/stage.vue'
-import AllArguments from './components/all.vue'
-import Card from './components/card.vue'
+// import AllArguments from './components/all.vue'
+// import Card from './components/card.vue'
 import { language, i18n } from './translate'
 </script>
 
@@ -31,6 +31,14 @@ import { language, i18n } from './translate'
 
 div {
   box-sizing: border-box;
+}
+
+.el-dialog {
+  width: 100%;
+  height: 80vh;
+  bottom: 0;
+  margin: 0;
+  top: 20vh;
 }
 </style>
 

@@ -59,7 +59,7 @@ onMounted(() => {
 .arguments {
   height: 100%;
   overflow: auto;
-  padding: 20px;
+  padding: 40px 20px;
   text-align: center;
 }
 .argument {
@@ -70,15 +70,27 @@ onMounted(() => {
   margin: 8px;
   width: 80px;
   border: 1px solid transparent;
+  cursor: pointer;
+  transition: all .3s;
   &.valid {
+    background: #dff5df;
+    border-color: #24a924;
+    color: #22a924;
+    &:hover {
     background: #24a924;
     border-color: #24a924;
     color: #fff;
+    }
   }
   &.invalid {
     background: #fae6e6;
     border-color: #e0a7a7;
     color: #760808;
+    &:hover {
+      border-color: #760808;
+      background: #760808;
+      color: #fff;
+    }
   }
 }
 </style>
