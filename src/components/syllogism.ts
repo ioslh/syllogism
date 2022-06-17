@@ -24,10 +24,17 @@ export type Mood = `${PropositionType}${PropositionType}${PropositionType}`
 
 
 export interface Proposition {
-  quantifier: Quantifier
-  quality: Quality
+  mood: PropositionType
   subject: string
   predicate: string
+}
+
+export interface Argument {
+  mood: Mood
+  figure: Figure
+  major: string
+  minor: string
+  middle: string
 }
 
 
@@ -138,14 +145,14 @@ const distributePredicate = {
   O: true,
 } as Record<PropositionType, boolean>
 
-const quantity = {
+export const quantity = {
   A: Quantifier.UNIVERSAL,
   E: Quantifier.UNIVERSAL,
   I: Quantifier.PARTICULAR,
   O: Quantifier.PARTICULAR,
 } as Record<PropositionType, Quantifier>
 
-const quality = {
+export const quality = {
   A: Quality.AFFITMATIVE,
   E: Quality.NEGATIVE,
   I: Quality.AFFITMATIVE,
@@ -244,26 +251,26 @@ export const fallacyCheck = (mood: Mood, figure: number, major: string, minor: s
   return []
 }
 
-const predicates = [
+export const predicates = [
   {
     fn: checkUndistributeMiddle,
-    desc: 'checkUndistributeMiddle',
+    desc: '中项不周延谬误',
   },
   {
     fn: checkIllicitProcess,
-    desc: 'checkIllicitProcess',
+    desc: '不当周延谬误',
   },
   {
     fn: checkTwoNegativePremises,
-    desc: 'checkTwoNegativePremises',
+    desc: '避免出现两个否定前提',
   },
   {
     fn: checkNegativeConclusion,
-    desc: 'checkNegativeConclusion',
+    desc: '前提否定，则结论必须否定',
   },
   {
     fn: checkExistentialFallacy,
-    desc: 'checkExistentialFallacy'
+    desc: '两个全称前提得不出特称结论'
   }
 ]
 

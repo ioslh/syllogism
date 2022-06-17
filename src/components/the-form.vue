@@ -1,6 +1,37 @@
 <template>
   <div class="content">
     <div class="left">
+      <!-- <div class="argument" :class="validOne ? 'valid' : ''">
+        <div class="premises">
+          <proposition-view
+            :propsition="majorTerm"
+            :subject-role="[1, 3].includes(form.figure) ? TERM_ROLE.MIDDLE : TERM_ROLE.MAJOR"
+            :predicate-role="[1, 3].includes(form.figure) ? TERM_ROLE.MAJOR : TERM_ROLE.MIDDLE"
+          />
+          <proposition-view
+            :propsition="minorTerm"
+            :subject-role="[1, 2].includes(form.figure) ? TERM_ROLE.MINOR : TERM_ROLE.MIDDLE"
+            :predicate-role="[1, 2].includes(form.figure) ? TERM_ROLE.MIDDLE : TERM_ROLE.MINOR"
+          />
+        </div>
+        <div class="conclusion">
+          <proposition-view
+            :propsition="conclusionTerm"
+            :subject-role="TERM_ROLE.MINOR"
+            :predicate-role="TERM_ROLE.MAJOR"
+          />
+        </div>
+      </div>
+      <div class="valid-tip" v-if="validOne">
+        <el-icon color="#379110"><circle-check-filled  /></el-icon>
+        {{ validOne.form }}: {{ validOne.name }}, {{ i18n.valid }}
+      </div>
+      <div class="falacies" v-if="falacies.length">
+        <p v-for="f in falacies" :key="f">{{ f }}</p>
+      </div> -->
+      <argument-input />
+    </div>
+    <div class="right">
       <div>
         <el-form :model="form" label-width="120px">
           <el-form-item :label="i18n.major">
@@ -50,33 +81,6 @@
         </el-form>
       </div>
     </div>
-    <div class="right">
-      <div class="argument" :class="validOne ? 'valid' : ''">
-        <div class="premises">
-          <proposition-view
-            :propsition="majorTerm"
-            :subject-role="[1, 3].includes(form.figure) ? TERM_ROLE.MIDDLE : TERM_ROLE.MAJOR"
-            :predicate-role="[1, 3].includes(form.figure) ? TERM_ROLE.MAJOR : TERM_ROLE.MIDDLE"
-          />
-          <proposition-view
-            :propsition="minorTerm"
-            :subject-role="[1, 2].includes(form.figure) ? TERM_ROLE.MINOR : TERM_ROLE.MIDDLE"
-            :predicate-role="[1, 2].includes(form.figure) ? TERM_ROLE.MIDDLE : TERM_ROLE.MINOR"
-          />
-        </div>
-        <div class="conclusion">
-          <proposition-view
-            :propsition="conclusionTerm"
-            :subject-role="TERM_ROLE.MINOR"
-            :predicate-role="TERM_ROLE.MAJOR"
-          />
-        </div>
-      </div>
-      <div class="valid-tip" v-if="validOne">
-        <el-icon color="#379110"><circle-check-filled  /></el-icon>
-        {{ validOne.form }}: {{ validOne.name }}, {{ i18n.valid }}
-      </div>
-    </div>
   </div>
 </template>
 
@@ -84,7 +88,8 @@
 import { CircleCheckFilled } from '@element-plus/icons-vue'
 import { onMounted, reactive } from 'vue'
 import PropositionView from './proposition.vue'
-import { runFallacyCheck, validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType } from './syllogism'
+import ArgumentInput from './argument-input.vue'
+import { predicates, runFallacyCheck, validSyllogisms, getQuantifier, getQuality, Quantifier, Quality, TERM_ROLE, type Proposition, type PropositionType, type Mood, type Figure } from './syllogism'
 import { i18n } from '../translate'
 
 const moodOptions = ['A', 'E', 'I', 'O']
@@ -110,8 +115,7 @@ let conclusionType = $computed<PropositionType>(() => form.mood[2] as Propositio
 
 const majorTerm = $computed<Proposition>(() => {
   return {
-    quantifier: getQuantifier(majorType),
-    quality: getQuality(majorType),
+    mood: majorType,
     subject: [1, 3].includes(form.figure) ? form.middle : form.major,
     predicate: [1, 3].includes(form.figure) ? form.major : form.middle,
   }
@@ -119,8 +123,7 @@ const majorTerm = $computed<Proposition>(() => {
 
 const minorTerm = $computed<Proposition>(() => {
   return {
-    quantifier: getQuantifier(minorType),
-    quality: getQuality(minorType),
+    mood: minorType,
     subject: [1, 2].includes(form.figure) ? form.minor : form.middle,
     predicate: [1, 2].includes(form.figure) ? form.middle : form.minor,
   }
@@ -128,8 +131,7 @@ const minorTerm = $computed<Proposition>(() => {
 
 const conclusionTerm = $computed<Proposition>(() => {
   return {
-    quantifier: getQuantifier(conclusionType),
-    quality: getQuality(conclusionType),
+    mood: conclusionType,
     predicate: form.major,
     subject: form.minor,
   }
@@ -139,6 +141,18 @@ const validOne = $computed(() => {
   const key = `${form.mood.join('')}-${form.figure}`
   const found = validSyllogisms.find(i => i.form === key)
   return found || null
+})
+
+const falacies = $computed<string[]>(() => {
+  const text: string[] = []
+  const mood = form.mood.join('')
+
+  predicates.forEach(({ fn, desc }) => {
+    if (fn(mood as Mood, form.figure as Figure)) {
+      text.push(desc)
+    }
+  })
+  return text
 })
 
 
@@ -156,7 +170,12 @@ onMounted(() => {
 }
 
 .left {
-  width: 460px;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .moods {
@@ -167,37 +186,12 @@ onMounted(() => {
 }
 
 .right {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  width: 400px;
+  border-left: 1px solid #eee;
+  padding: 20px 0;
 }
 
 
-.premises {
-  padding: 10px 40px 10px 100px;
-  & > div {
-    margin: 6px 0;
-  }
-}
-
-.conclusion {
-  margin-top: 10px;
-  padding: 10px 40px 10px 100px;
-  border-top: 1px solid #aaa;
-  & > div {
-    position: relative;
-    &::before {
-      padding-right: 10px;
-      display: block;
-      position: absolute;
-      right: 100%;
-      white-space: nowrap;
-      color: #aaa;
-    }
-  }
-}
 
 .argument {
   padding: 20px;
@@ -208,6 +202,30 @@ onMounted(() => {
     border-radius: 6px;
     background: #f3ffee;
   }
+  .premises {
+    padding: 10px 40px 10px 100px;
+    & > div {
+      margin: 6px 0;
+    }
+  }
+
+  .conclusion {
+    margin-top: 10px;
+    padding: 10px 40px 10px 100px;
+    border-top: 1px solid #aaa;
+    & > div {
+      position: relative;
+      &::before {
+        padding-right: 10px;
+        display: block;
+        position: absolute;
+        right: 100%;
+        white-space: nowrap;
+        color: #aaa;
+      }
+    }
+  }
+
 }
 
 .valid-tip {
@@ -217,10 +235,10 @@ onMounted(() => {
 </style>
 
 <style>
-  .language-cn .conclusion > div::before {
+  /* .language-cn .conclusion > div::before {
     content: '所以';
   }
   .language-en .conclusion > div::before {
     content: 'Thus';
-  }
+  } */
 </style>

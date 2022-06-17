@@ -2,7 +2,8 @@ import { computed, ref } from 'vue'
 
 const i18nText = {
   cn: {
-    title: "三段论生成",
+    title: "三段论",
+    subtitle: '验证，生成，解释',
     language: "English",
     major: '大项',
     minor: '小项',
@@ -22,7 +23,8 @@ const i18nText = {
     valid: '这是一个有效的三段论',
   },
   en: {
-    title: "Generate syllogism",
+    title: "Syllogism",
+    subtitle: 'Validate, generate, and explain',
     language: "中文",
     major: 'Major Term',
     minor: 'Minor Term',

@@ -1,0 +1,293 @@
+<template>
+  <tr class="proposition">
+    <td>
+      <select
+        @change="(e: any) => quantifier = e.target.value"
+        class="quantifier"
+      >
+        <option
+          v-for="q in quantifiers"
+          :key="q.value"
+          :value="q.value"
+          :selected="q.value === quantifier"
+        >{{ q.label }}</option>
+      </select>
+    </td>
+    <td>
+      <select
+        class="subject"
+        v-if="isConclusion"
+        placeholder="请正确输入前提"
+        @change="onChangeConclusionSubject"
+      >
+        <option
+          v-for="t in conclusionTerms"
+          :key="t.value"
+          :value="t.value"
+          :disabled="t.disabled"
+          :selected="t.value === subject"
+        >{{ t.label }}</option>
+      </select>
+      <input v-else class="subject" placeholder="请输入主项" :value="subject" @input="(e: any) => subject = e.target.value" />
+
+    </td>
+    <td>
+      <select @change="(e: any) => copula = e.target.value" class="copula">
+        <option
+          v-for="q in qualities"
+          :key="q.value"
+          :value="q.value"
+          :disabled="q.disabled"
+        >
+          {{ q.label }}
+        </option>
+      </select>
+
+    </td>
+    <td>
+      <select
+        v-if="isConclusion"
+        class="predicate"
+        placeholder="请正确输入前提"
+        @change="onChangeConclusionPredicate"
+      >
+        <option
+          v-for="t in conclusionTerms"
+          :key="t.value"
+          :value="t.value"
+          :disabled="t.disabled"
+          :selected="t.value === predicate"
+        >{{ t.label }}</option>
+      </select>
+      <input v-else class="predicate" placeholder="请输入谓项" :value="predicate" @input="(e: any) => predicate = e.target.value" />
+    </td>
+  </tr>
+</template>
+
+<script lang="ts" setup>
+import { nextTick } from 'vue';
+import { type Proposition, type PropositionType } from './syllogism'
+
+const props = defineProps<{
+  value: Proposition
+  isConclusion?: boolean
+  terms?: string[]
+}>()
+
+const emit = defineEmits(['update:value'])
+
+type InputQuantifierType = 'all' | 'no' | 'some'
+type InputCopulaType = 'is' | 'isnot'
+
+const quantifiers = [
+  {
+    label: '所有的',
+    value: 'all',
+  },
+  {
+    label: '没有',
+    value: 'no',
+  },
+  {
+    label: '有',
+    value: 'some',
+  },
+] as Array<{ label: string, value: InputQuantifierType }>
+
+let proposition = $computed<Proposition>({
+  get() {
+    return props.value
+  },
+  set(v) {
+    emit('update:value', v)
+  }
+})
+
+let subject = $computed({
+  get() {
+    return proposition.subject
+  },
+  set(s: string) {
+    // console.log('perform set subject', s)
+    proposition = {
+      ...proposition,
+      subject: s,
+    }
+  }
+})
+
+
+let predicate = $computed({
+  get() {
+    return proposition.predicate
+  },
+  set(p: string) {
+    // console.log('perform set predicate', p)
+    proposition = {
+      ...proposition,
+      predicate: p,
+    }
+  }
+})
+
+let mood = $computed({
+  get() {
+    return proposition.mood
+  },
+  set(m: PropositionType) {
+    proposition = {
+      ...proposition,
+      mood: m,
+    }
+  }
+})
+
+
+let quantifier = $computed<InputQuantifierType>({
+  get() {
+    const m = proposition.mood
+    switch(m) {
+      case 'A':
+        return 'all'
+      case 'E':
+        return 'no'
+      default:
+        return 'some'
+    }
+  },
+  set(q: InputQuantifierType) {
+    switch(q) {
+      case 'all':
+        return mood = 'A'
+      case 'no':
+        return mood = 'E'
+      case 'some':
+        if (copula === 'is') {
+          return mood = 'I'
+        } else {
+          return mood = 'O'
+        }
+    }
+  }
+})
+
+let copula = $computed<InputCopulaType>({
+  get() {
+    return proposition.mood === 'O' ? 'isnot' : 'is'
+  },
+  set(c: InputCopulaType) {
+    const m = proposition.mood
+    if (c === 'is' && m === 'O') {
+      mood = 'I'
+    } else if (c === 'isnot' && m === 'I') {
+      mood = 'O'
+    }
+  }
+})
+
+let conclusionTerms = $computed(() => {
+  return props.terms && props.terms.length ? props.terms.map(t => ({
+    label: t,
+    value: t,
+    disabled: false,
+  })) : [
+    {
+      label: '请正确输入前提',
+      value: '__noop',
+      disabled: true,
+    }
+  ]
+})
+
+let qualities = $computed(() => {
+  if (['no', 'all'].includes(quantifier)) {
+    copula = 'is'
+    return [
+      {
+        label: quantifier === 'all' ? '都是' :'是',
+        value: 'is',
+      },
+      {
+        label: '不是',
+        value: 'isnot',
+        disabled: true,
+      }
+    ]
+  }
+  return [
+    {
+      label: '是',
+      value: 'is',
+    },
+    {
+      label: '不是',
+      value: 'isnot',
+    }
+  ]
+})
+
+
+const onChangeConclusionSubject = (e: any) => {
+  const p: Partial<Proposition> = {}
+  const next = e.target.value
+  p.subject = next
+  if (props.terms && props.terms.length === 2) {
+    const [a, b] = props.terms
+    p.predicate = next === a ? b : a
+  }
+
+  proposition = {
+    ...proposition,
+    ...p,
+  }
+}
+const onChangeConclusionPredicate = (e: any) => {
+  const p: Partial<Proposition> = {}
+  const next = e.target.value
+  p.predicate = next
+  if (props.terms && props.terms.length === 2) {
+    const [a, b] = props.terms
+    p.subject = next === a ? b : a
+  }
+
+  proposition = {
+    ...proposition,
+    ...p,
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.proposition {
+  select, input {
+    border: none;
+    outline: none;
+    font-size: 26px;
+  }
+  input {
+    padding: 0 4px;
+    width: 150px;
+  }
+  select {
+    text-align: right;
+  }
+  .predicate, .subject {
+    text-align: left;
+  }
+}
+
+.quantifier {
+  color: #8dacef;
+}
+
+.subject, .predicate {
+  font-weight: bold;
+  color: #43b92e;
+}
+
+
+
+.copula {
+  color: #333;
+}
+</style>

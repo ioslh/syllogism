@@ -1,14 +1,14 @@
 <template>
   <div class="proposition">
-    <span class="quantifier">{{ quantifier }}</span>
+    <span class="quantifier">{{ quantifierText }}</span>
     <span class="term subject" :style="styles[subjectRole]">{{ propsition.subject }}</span>
-    <span class="copula">{{ quality }}</span>
+    <span class="copula">{{ qualityText }}</span>
     <span class="term predicate" :style="styles[predicateRole]">{{ propsition.predicate }}</span>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Proposition, PropositionType, Quantifier, Quality, TERM_ROLE } from './syllogism'
+import { quantity, quality, Proposition, Quantifier, Quality, TERM_ROLE } from './syllogism'
 import { i18n } from '../translate'
 
 const { propsition } = defineProps<{
@@ -17,16 +17,17 @@ const { propsition } = defineProps<{
   predicateRole: TERM_ROLE
 }>()
 
-const quantifier = $computed(() => {
-  if (propsition.quantifier === Quantifier.PARTICULAR) return i18n.value.some
-  return propsition.quality === Quality.AFFITMATIVE ? i18n.value.all : i18n.value.no
+
+const quantifierText = $computed(() => {
+  if (quantity[propsition.mood] === Quantifier.PARTICULAR) return i18n.value.some
+  return quality[propsition.mood] === Quality.AFFITMATIVE ? i18n.value.all : i18n.value.no
 })
 
-const quality = $computed(() => {
-  if (propsition.quantifier === Quantifier.UNIVERSAL) {
-    return propsition.quality === Quality.AFFITMATIVE ? i18n.value.allis : i18n.value.is
+const qualityText = $computed(() => {
+  if (quantity[propsition.mood] === Quantifier.UNIVERSAL) {
+    return quality[propsition.mood] === Quality.AFFITMATIVE ? i18n.value.allis : i18n.value.is
   }
-  return propsition.quality === Quality.AFFITMATIVE ? i18n.value.is : i18n.value.isnot
+  return quality[propsition.mood] === Quality.AFFITMATIVE ? i18n.value.is : i18n.value.isnot
 })
 
 const majorStyle = {
