@@ -30,7 +30,6 @@
         >{{ t.label }}</option>
       </select>
       <input v-else class="subject" placeholder="请输入主项" :value="subject" @input="(e: any) => subject = e.target.value" />
-
     </td>
     <td>
       <select @change="(e: any) => copula = e.target.value" class="copula">
@@ -39,6 +38,7 @@
           :key="q.value"
           :value="q.value"
           :disabled="q.disabled"
+          :selected="q.value === copula"
         >
           {{ q.label }}
         </option>
@@ -261,16 +261,33 @@ const onChangeConclusionPredicate = (e: any) => {
 <style lang="less" scoped>
 .proposition {
   select, input {
-    border: none;
     outline: none;
     font-size: 26px;
   }
   input {
-    padding: 0 4px;
+    padding: 7px 8px;
     width: 150px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color .3s;
+    &:hover {
+      border-color: #ccc;
+    }
+    &:focus {
+      border-color: #000;
+    }
   }
   select {
+    padding: 6px 0;
     text-align: right;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    &:hover {
+      border-color: #ccc;
+    }
+    &:focus {
+      border-color: #000;
+    }
   }
   .predicate, .subject {
     text-align: left;

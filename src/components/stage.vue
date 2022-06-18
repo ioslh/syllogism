@@ -4,7 +4,7 @@
       <div class="argument-wrapper">
         <argument-show :argument="argument" />
         <div class="control">
-          <el-button @click="showEditor = true" type="primary" link>修改</el-button>
+          <el-button @click="showEditor = true" type="primary" link>输入三段论</el-button>
         </div>
       </div>
       <div class="state">
@@ -17,7 +17,6 @@
           <p v-for="p in fallacies" :key="p">{{ p }}</p>
         </div>
       </div>
-
     </div>
     <div class="right">
       <the-form :argument="argument" />
@@ -39,26 +38,42 @@
 </template>
 
 <script lang="ts" setup>
+import { watch } from 'vue'
 import type { Argument, Mood } from './syllogism'
 import { validSyllogisms, argumentAssert } from './syllogism'
 import TheForm from './form.vue'
 import ArgumentShow from './argument-show.vue'
 import ArgumentInput from './argument-input.vue'
 
-let showEditor = $ref(false)
-let argument = $ref<Argument>({
+const tpl = {
   major: '英雄',
   minor: '士兵',
   middle: '胆小鬼',
   mood: ['E', 'I', 'O'],
   figure: 2,
-})
+} as Argument
+const key = 'LOCAL_ARGUMENT'
+const getStorageArgument = () => {
+  const ls = localStorage.getItem(key)
+  try {
+    return ls ? JSON.parse(ls) : tpl
+  } catch(e) {
+    return tpl
+  }
+}
+
+let showEditor = $ref(true)
+let argument = $ref<Argument>(getStorageArgument())
 
 const onArgumentEdit = (arg: Argument) => {
   showEditor = false
   argument = arg
 }
 
+
+watch($$(argument), (l) => {
+  localStorage.setItem(key, JSON.stringify(l))
+}, { deep: true })
 
 
 const validOne = $computed(() => {
