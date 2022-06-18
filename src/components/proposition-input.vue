@@ -39,6 +39,7 @@
           :key="q.value"
           :value="q.value"
           :disabled="q.disabled"
+          :selected="q.value === copula"
         >
           {{ q.label }}
         </option>
