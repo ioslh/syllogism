@@ -4,7 +4,7 @@
       <div class="argument-wrapper">
         <argument-show :argument="argument" />
         <div class="control">
-          <el-button @click="showEditor = true" type="primary" link>修改</el-button>
+          <el-button @click="showEditor = true" type="primary" link>输入三段论</el-button>
         </div>
       </div>
       <div class="state">
