@@ -17,7 +17,6 @@
           <p v-for="p in fallacies" :key="p">{{ p }}</p>
         </div>
       </div>
-
     </div>
     <div class="right">
       <the-form :argument="argument" />
@@ -63,7 +62,7 @@ const getStorageArgument = () => {
   }
 }
 
-let showEditor = $ref(false)
+let showEditor = $ref(true)
 let argument = $ref<Argument>(getStorageArgument())
 
 const onArgumentEdit = (arg: Argument) => {
