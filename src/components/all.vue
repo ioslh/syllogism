@@ -13,8 +13,8 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import { argumentAssert } from './syllogism'
-import type { Mood, Figure } from './syllogism'
+import { argumentAssert } from '@/shared/syllogism'
+import type { Mood, Figure } from '@/shared/syllogism'
 
 const types = ['A', 'E', 'I', 'O']
 const figures = [1, 2, 3, 4] as Figure[]
@@ -55,7 +55,7 @@ onMounted(() => {
 
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .arguments {
   height: 100%;
   overflow: auto;

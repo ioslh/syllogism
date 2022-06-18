@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts" setup>
-import { quantity, quality, Proposition, Quantifier, Quality, TERM_ROLE } from './syllogism'
-import { i18n } from '../translate'
+import { quantity, quality, Proposition, Quantifier, Quality, TERM_ROLE } from '@/shared/syllogism'
+import { i18n } from '@/shared/translate'
 
 const { propsition } = defineProps<{
   propsition: Proposition
@@ -50,7 +50,7 @@ const styles = {
 
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .proposition {
   font-size: 40px;
   font-weight: 900;

@@ -22,7 +22,7 @@
       </tbody>
     </table>
     <div class="control">
-      <el-button @click="onSubmit" type="primary">确定</el-button>
+      <button @click="onSubmit">验证</button>
     </div>
     <div class="error" v-if="err">
       {{ reasons[err] }}
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Proposition, type PropositionType, type Argument, type Mood } from './syllogism'
+import { type Proposition, type PropositionType, type Argument, type Mood } from '@/shared/syllogism'
 import PropositionInput from './proposition-input.vue'
 import { onMounted } from 'vue'
 
@@ -189,7 +189,7 @@ onMounted(() => {
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
 .argument {
   :deep(td) {
@@ -212,7 +212,7 @@ onMounted(() => {
 
 
 .control {
-  text-align: center;
+  text-align: right;
   margin-top: 20px;
 }
 

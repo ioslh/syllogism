@@ -1,17 +1,9 @@
 <template>
-  <h1>src/pages/fallacies.vue</h1>
+  <all-syllogisms />
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
-
-export default defineComponent({
-  props: {},
-  emits: [],
-  setup(props, { emit }){
-    return {}
-  }
-})
+<script lang="ts" setup>
+import AllSyllogisms from '@/components/all.vue'
 </script>
 
 <style lang="scss" scoped>

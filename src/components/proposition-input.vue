@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Proposition, type PropositionType } from './syllogism'
+import { type Proposition, type PropositionType } from '@/shared/syllogism'
 
 const props = defineProps<{
   mark: string
@@ -258,7 +258,7 @@ const onChangeConclusionPredicate = (e: any) => {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .proposition {
   select, input {
     outline: none;

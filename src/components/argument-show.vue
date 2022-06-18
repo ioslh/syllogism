@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { Argument, PropositionType, Proposition } from './syllogism'
-import { TERM_ROLE } from './syllogism'
+import type { Argument, PropositionType, Proposition } from '@/shared/syllogism'
+import { TERM_ROLE } from '@/shared/syllogism'
 import PropositionView from './proposition.vue'
 
 const props = defineProps<{
@@ -63,7 +63,3 @@ const conclusionTerm = $computed<Proposition>(() => {
 
 
 </script>
-
-<style lang="scss" scoped>
-
-</style>
