@@ -4,7 +4,8 @@
       v-for="a in allArguments"
       :key="a.type"
       class="argument"
-      :class="a.valid ? 'valid' : 'invalid'"
+      :class="{ valid: a.valid, invalid: !a.valid, active: activeForm === a.type }"
+      @click="activeForm = a.type"
     >
       {{ a.type }}
     </div>
@@ -15,6 +16,17 @@
 import { onMounted } from 'vue'
 import { argumentAssert } from '@/shared/syllogism'
 import type { Mood, Figure } from '@/shared/syllogism'
+
+const props = defineProps<{
+  active: string
+}>()
+
+const emits = defineEmits(['update:active'])
+
+let activeForm = $computed({
+  get: () => props.active,
+  set: (v) => emits('update:active', v)
+})
 
 const types = ['A', 'E', 'I', 'O']
 const figures = [1, 2, 3, 4] as Figure[]
@@ -76,17 +88,17 @@ onMounted(() => {
     background: #dff5df;
     border-color: #24a924;
     color: #22a924;
-    &:hover {
-    background: #24a924;
-    border-color: #24a924;
-    color: #fff;
+    &:hover, &.active {
+      background: #24a924;
+      border-color: #24a924;
+      color: #fff;
     }
   }
   &.invalid {
     background: #fae6e6;
     border-color: #e0a7a7;
     color: #760808;
-    &:hover {
+    &:hover, &.active {
       border-color: #760808;
       background: #760808;
       color: #fff;

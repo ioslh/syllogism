@@ -17,7 +17,7 @@
         <td>{{ i18n.mood }}</td>
         <td>
           <div class="moods">
-            
+            <mood-select v-model:value="argument.mood" />
             <!-- <el-select v-model="argument.mood[0]" size="small">
               <el-option
                 v-for="m in moodOptions"
@@ -72,6 +72,7 @@ import { defineComponent, ref, watch } from 'vue'
 import type { Argument, Figure } from '@/shared/syllogism'
 import { i18n } from '@/shared/translate'
 import TextInput from '@/components/text-input.vue'
+import MoodSelect from '@/components/mood-select.vue'
 
 const props = defineProps<{
   argument: Argument
