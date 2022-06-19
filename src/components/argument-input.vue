@@ -212,8 +212,26 @@ onMounted(() => {
 
 
 .control {
-  text-align: right;
+  text-align: left;
   margin-top: 20px;
+  button {
+    border: none;
+    outline: none;
+    background-color: #2080f0;
+    font-size: 14px;
+    cursor: pointer;
+    color: #fff;
+    padding: 0 16px;
+    height: 26px;
+    border-radius: 2px;
+    transition: background-color .3s;
+    &:hover {
+      background-color: #4098fc;
+    }
+    &:active, &:focus {
+      background-color: #1060c9;
+    }
+  }
 }
 
 .error {

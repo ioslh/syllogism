@@ -31,15 +31,18 @@ const qualityText = $computed(() => {
 })
 
 const majorStyle = {
-  color: 'rgb(188,68,68)',
+  color: 'rgb(88, 100, 255)',
+  background: '#e4e4fc'
 }
 
 const minorStyle = {
-  color: 'rgb(15,140,15)',
+  color: '#f46e77',
+  background: '#fbd8d8',
 }
 
 const middleStyle = {
-  color: 'rgb(34,34,173)',
+  color: '#438a11',
+  background: '#cef5ce'
 }
 
 const styles = {
@@ -52,21 +55,23 @@ const styles = {
 
 <style lang="scss" scoped>
 .proposition {
-  font-size: 40px;
+  font-size: 36px;
   font-weight: 900;
+  color: #888;
 }
 
 .term {
-
+  border-radius: 4px;
+  padding: 0 4px;
 }
 
 .quantifier {
-  color: #581;
+  // color: #581;
   margin-right: 4px;
 }
 
 .copula {
-  color: #888;
+  // color: #888;
   margin: 0 4px;
 }
 </style>

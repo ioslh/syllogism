@@ -3,9 +3,12 @@
     <header>
       <h2>Categorical Syllogism</h2>
       <div class="nav">
-        <router-link to="/validate">Validate</router-link>
-        <router-link to="/fallacies">Fallacies</router-link>
-        <router-link to="/forms">Forms</router-link>
+        <a
+          v-for="m in menus"
+          :key="m.link"
+          :class="{ active: active === m.link }"
+          @click="active = m.link"
+        >{{ m.text }}</a>
       </div>
       <div class="space"></div>
       <div class="language">English</div>
@@ -16,8 +19,35 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { defineComponent, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+
+let active = $computed({
+  get: () => route.path.split('/')[1],
+  set: (v) => {
+    router.push(`/${v}`)
+  }
+})
+
+const menus = [
+  {
+    link: 'validate',
+    text: 'Validate',
+  },
+  {
+    link: 'fallacies',
+    text: 'Fallacies',
+  },
+  {
+    link: 'forms',
+    text: 'Forms',
+  },
+]
 
 </script>
 
@@ -46,13 +76,14 @@ header {
 .nav {
   margin-left: 20px;
   a {
+    cursor: pointer;
     margin: 0 6px;
     text-decoration: none;
     font-weight: bold;
     font-size: 14px;
     color: #888;
     transition: color .3s;
-    &.router-link-active {
+    &.active {
       color: #ed5ca3;
     }
   }

@@ -2,6 +2,10 @@
   <div class="validate">
     <div class="inner">
       <div class="left">
+        <div class="title">
+          <h3>{{ editing ? '输入直言三段论' : '验证直言三段论' }}</h3>
+          <button v-if="!editing" class="text-button" @click="editing = true">输入直言三段论</button>
+        </div>
         <argument-input
           v-if="editing"
           :argument="argument"
@@ -9,7 +13,7 @@
         />
         <div v-else>
           <argument-show :argument="argument" />
-          <button @click="editing = true">输入直言三段论</button>
+          <argument-validation :argument="argument" />
         </div>
       </div>
       <div class="right">
@@ -25,6 +29,7 @@ import type { Argument, Mood } from '@/shared/syllogism'
 import ArgumentInput from '@/components/argument-input.vue'
 import ArgumentShow from '@/components/argument-show.vue'
 import ArgumentStruct from '@/components/argument-struct.vue'
+import ArgumentValidation from '@/components/argument-validation.vue'
 
 const tpl = {
   major: '英雄',
@@ -68,7 +73,19 @@ watch($$(argument), (l) => {
   max-width: 1200px;
   margin: auto;
   height: 100%;
-  padding-top: 100px;
+  padding-top: 50px;
+
+}
+
+.title {
+  margin-bottom: 40px;
+  font-size: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h3 {
+
+  }
 }
 
 .inner {
@@ -78,13 +95,34 @@ watch($$(argument), (l) => {
 }
 
 .left {
-  padding-right: 20px;
+  padding-right: 40px;
+  width: 600px;
+  flex: 1;
+}
+
+.text-button {
+  border: none;
+  outline: none;
+  background-color: #2080f0;
+  font-size: 14px;
+  cursor: pointer;
+  color: #fff;
+  padding: 0 6px;
+  height: 26px;
+  border-radius: 2px;
+  transition: background-color .3s;
+  &:hover {
+    background-color: #4098fc;
+  }
+  &:active, &:focus {
+    background-color: #1060c9;
+  }
 }
 
 .right {
-  width: 400px;
+  flex: 300px 0 0;
   min-height: 200px;
   border-left: 1px solid #ccc;
-  padding-left: 20px;
+  padding-left: 40px;
 }
 </style>

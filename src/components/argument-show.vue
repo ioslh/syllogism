@@ -12,6 +12,7 @@
         :predicate-role="[1, 2].includes(arg.figure) ? TERM_ROLE.MIDDLE : TERM_ROLE.MINOR"
       />
     </div>
+    <hr>
     <div class="conclusion">
       <proposition-view
         :propsition="conclusionTerm"
@@ -60,6 +61,38 @@ const conclusionTerm = $computed<Proposition>(() => {
     subject: arg.minor,
   }
 })
-
-
 </script>
+
+
+<style scoped lang="scss">
+hr {
+  border-color: #ccc;
+}
+.premises, .conclusion {
+  position: relative;
+  padding: 10px 40px;
+  &::before {
+    display: block;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    font-size: 40px;
+    color: #888;
+  }
+}
+
+.premises {
+  & > div:first-child {
+    margin-bottom: 10px;
+  }
+  &::before {
+    content: '∵';
+  }
+}
+
+.conclusion {
+  &::before {
+    content: '∴';
+  }
+}
+</style>

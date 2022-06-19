@@ -301,7 +301,7 @@ const onChangeConclusionPredicate = (e: any) => {
 }
 
 .quantifier {
-  color: #8dacef;
+  color: #888;
 }
 
 .subject, .predicate {
@@ -312,6 +312,6 @@ const onChangeConclusionPredicate = (e: any) => {
 
 
 .copula {
-  color: #333;
+  color: #888;
 }
 </style>

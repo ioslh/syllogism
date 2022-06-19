@@ -6,9 +6,6 @@
 * {
   margin: 0;
   padding: 0;
-}
-
-html, body {
   font-family: 'Comic Sans MS';
 }
 
