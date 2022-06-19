@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import TheForm from './components/the-form.vue'
-import { language, i18n } from '../translate'
+import { language, i18n } from '@/shared/translate'
 </script>
 
 
