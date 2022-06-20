@@ -81,20 +81,23 @@ const emit = defineEmits(['update:value'])
 type InputQuantifierType = 'all' | 'no' | 'some'
 type InputCopulaType = 'is' | 'isnot'
 
-const quantifiers = [
-  {
-    label: i18n.value.all,
-    value: 'all',
-  },
-  {
-    label: i18n.value.no,
-    value: 'no',
-  },
-  {
-    label: i18n.value.some,
-    value: 'some',
-  },
-] as Array<{ label: string, value: InputQuantifierType }>
+const quantifiers = $computed(() => {
+  return  [
+    {
+      label: i18n.value.all,
+      value: 'all',
+    },
+    {
+      label: i18n.value.no,
+      value: 'no',
+    },
+    {
+      label: i18n.value.some,
+      value: 'some',
+    },
+  ] as Array<{ label: string, value: InputQuantifierType }>
+})
+
 
 let proposition = $computed<Proposition>({
   get() {
