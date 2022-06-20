@@ -29,11 +29,13 @@ const i18nText = {
     modifySyllogism: '修改直言三段论',
     validate: '验证',
     validateSyllogism: '验证直言三段论',
+    source: '来源',
     refBook: '逻辑学导论',
     refLink: 'https://book.douban.com/subject/26267406/',
     subject: '主项',
     predicate: '谓项',
     premiseFirst: '请正确输入前提',
+    validForms: '有效的三段论格式',
   },
   en: {
     title: "Categorical Syllogism",
@@ -63,11 +65,13 @@ const i18nText = {
     modifySyllogism: 'UPDATE CATEGORICAL SYLLOGISM',
     validate: 'Validate',
     validateSyllogism: 'VALIDATION of CATEGORICAL SYLLOGISM',
+    source: 'Source',
     refBook: 'Introduction to Logic',
     refLink: 'https://www.amazon.com/Introduction-Logic-Irving-M-Copi/dp/1292024828',
     subject: 'Subject term',
     predicate: 'Predicate term',
     premiseFirst: 'Finish premise first',
+    validForms: 'Valid syllogism forms',
   }
 } as Record<string, Record<string, string>>
 

@@ -43,14 +43,10 @@ let menus = $computed(() => {
       link: 'validate',
       text: isEn ? 'Validate' : '验证',
     },
-    // {
-    //   link: 'fallacies',
-    //   text: isEn ? 'Fallacies' : '谬误',
-    // },
-    // {
-    //   link: 'forms',
-    //   text: isEn ? 'Forms' : '形式',
-    // },
+    {
+      link: 'fallacies',
+      text: isEn ? 'Fallacies' : '谬误',
+    },
   ]
 
 })
