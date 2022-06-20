@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const i18nText = {
   zh: {
@@ -71,6 +71,15 @@ const i18nText = {
   }
 } as Record<string, Record<string, string>>
 
-export const language = ref('zh')
+const key = 'SYLLOGISM_LANG'
+const getInitLanguage = (): string => {
+  let l = localStorage.getItem(key) as string
+  return ['zh', 'en'].includes(l) ? l : 'zh'
+}
+
+export const language = ref(getInitLanguage())
+watch(language, v => {
+  localStorage.setItem(key, v)
+})
 
 export const i18n = computed(() => i18nText[language.value])
