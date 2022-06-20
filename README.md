@@ -1,3 +1,4 @@
-# Syllogism Box
+# Categorical Syllogism
 
-Self-use for generating syllogism.
+Validation of Categorical Syllogism
+
