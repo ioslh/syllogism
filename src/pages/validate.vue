@@ -33,11 +33,11 @@ import ArgumentStruct from '@/components/argument-struct.vue'
 import ArgumentValidation from '@/components/argument-validation.vue'
 
 const tpl = {
-  major: '英雄',
-  minor: '士兵',
-  middle: '胆小鬼',
-  mood: ['E', 'I', 'O'],
-  figure: 2,
+  major: '必死的',
+  minor: '希腊人',
+  middle: '人',
+  mood: ['A', 'A', 'A'],
+  figure: 1,
 } as Argument
 const key = 'LOCAL_ARGUMENT'
 const getStorageArgument = () => {
