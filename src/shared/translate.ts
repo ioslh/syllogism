@@ -36,6 +36,7 @@ const i18nText = {
     predicate: '谓项',
     premiseFirst: '请正确输入前提',
     validForms: '有效的三段论格式',
+    close: '关闭',
   },
   en: {
     title: "Categorical Syllogism",
@@ -72,6 +73,7 @@ const i18nText = {
     predicate: 'Predicate term',
     premiseFirst: 'Finish premise first',
     validForms: 'Valid syllogism forms',
+    close: 'CLOSE',
   }
 } as Record<string, Record<string, string>>
 

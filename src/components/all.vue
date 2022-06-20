@@ -12,7 +12,7 @@
       {{ a.type }}
     </div>
 
-    <div v-if="activeForm" class="select-form">
+    <div v-if="activeForm" class="select-form" :class="activeForm.valid ? 'validpopup' : 'invalidpopup'">
       <div class="name">{{ activeForm.type }}{{ i18n.colon }}{{ activeForm.valid ? i18n.valid : i18n.invalid }}</div>
       <div v-if="activeForm.fallacies.length">
         <p>{{ i18n.commitFallacies }}{{ i18n.colon }}</p>
@@ -27,7 +27,7 @@
           <a :href="i18n.refLink">&lt;&lt;{{ i18n.refBook }}&gt;&gt;</a>
         </div>
       </div>
-      <div class="control"><a @click="activeForm = null">关闭</a></div>
+      <div class="control"><a @click="activeForm = null">{{ i18n.close }}</a></div>
     </div>
   </div>
 </template>
@@ -183,6 +183,13 @@ $text-color: #fff;
   padding: 20px;
   background-color: #fff;
   box-shadow: 0 0 20px -10px #333;
+  border-top: 4px solid transparent;
+  &.validpopup {
+    border-color: #0a7a0a;
+  }
+  &.invalidpopup {
+    border-color: $highlight-color;
+  }
   ul {
     padding-left: 20px;
     li {
