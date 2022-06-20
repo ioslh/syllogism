@@ -11,6 +11,7 @@
         >{{ m.text }}</a>
       </div>
       <div class="space"></div>
+      <a class="github" href="https://github.com/ioslh/syllogism" target="_blank">GitHub</a>
       <a class="language" @click="language = (language === 'en' ? 'zh' : 'en')">
         {{ language === 'en' ? '中文' : 'English' }}
       </a>
@@ -70,6 +71,7 @@ header {
   display: flex;
   align-items: center;
   padding: 0 20px;
+  gap: 20px;
   h2 {
     font-size: 18px;
   }
@@ -92,6 +94,10 @@ header {
       color: #ed5ca3;
     }
   }
+}
+
+.github {
+  color: #a0abb2;
 }
 
 .language {
