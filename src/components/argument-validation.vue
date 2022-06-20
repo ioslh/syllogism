@@ -1,23 +1,30 @@
 <template>
   <div class="validation" :class="validName ? 'valid' : 'invalid'">
     <div class="overview">
-      <span class="form">{{ form }}: </span>
-      <span v-if="validName" class="name">{{ validName }}, </span>
-      <span v-if="validName">这是一个有效的三段论。</span>
-      <span v-else>这是一个无效的三段论。</span>
+      <span class="form">{{ form }}{{ i18n.colon }}</span>
+      <span v-if="validName" class="name">{{ validName }}{{ i18n.comma }}</span>
+      <span v-if="validName">{{ i18n.valid }}</span>
+      <span v-else>{{ i18n.invalid }}</span>
     </div>
     <div class="fallacies" v-if="fallacies.length">
-      <h5>违反了以下原则：</h5>
+      <p>{{ i18n.commitFallacies }}{{ i18n.colon }}</p>
       <ol>
-        <li v-for="f in fallacies" :key="f">{{ f }}</li>
+        <li v-for="f in fallacies" :key="f.name">
+          <h5>{{ f.name }}</h5>
+          <p>{{ f.detail }}</p>
+        </li>
       </ol>
+      <div class="ref">
+        <a target="_blank" :href="i18n.refLink">&lt;&lt;{{ i18n.refBook }}&gt;&gt;</a>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { i18n } from '@/shared/translate'
 import type { Argument, Mood } from '@/shared/syllogism'
-import { validSyllogisms, argumentAssert } from '@/shared/syllogism'
+import { validSyllogisms, argumentAssert, fallacyExplains } from '@/shared/syllogism'
 
 const props = defineProps<{
   argument: Argument
@@ -35,11 +42,11 @@ const validName = $computed<string | undefined>(() => {
 
 
 let fallacies = $computed(() => {
-  const text: string[] = []
+  const text: { name: string, detail: string }[] = []
   const m = props.argument.mood.join('') as Mood
-  argumentAssert.forEach(({ fn, desc }) => {
+  argumentAssert.forEach(({ fn, key }) => {
     if (fn(m, props.argument.figure)) {
-      text.push(desc)
+      text.push(fallacyExplains.value[key])
     }
   })
   return text
@@ -75,7 +82,25 @@ let fallacies = $computed(() => {
 .fallacies {
   margin-top: 20px;
   ol {
-    list-style: inside;
+    padding-left: 20px;
+    li {
+      margin: 20px 0;
+    }
+    h5 {
+      font-size: 16px;
+    }
+    p {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
+  }
+}
+
+.ref {
+  text-align: right;
+  a {
+    color: #4d65ab;
   }
 }
 </style>

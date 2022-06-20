@@ -18,7 +18,7 @@
       <select
         class="subject"
         v-if="isConclusion"
-        placeholder="请正确输入前提"
+        :placeholder="i18n.premiseFirst"
         @change="onChangeConclusionSubject"
       >
         <option
@@ -29,7 +29,7 @@
           :selected="t.value === subject"
         >{{ t.label }}</option>
       </select>
-      <input v-else class="subject" placeholder="请输入主项" :value="subject" @input="(e: any) => subject = e.target.value" />
+      <input v-else class="subject" :placeholder="i18n.subject" :value="subject" @input="(e: any) => subject = e.target.value" />
     </td>
     <td>
       <select @change="(e: any) => copula = e.target.value" class="copula">
@@ -49,7 +49,7 @@
       <select
         v-if="isConclusion"
         class="predicate"
-        placeholder="请正确输入前提"
+        :placeholder="i18n.premiseFirst"
         @change="onChangeConclusionPredicate"
       >
         <option
@@ -60,12 +60,13 @@
           :selected="t.value === predicate"
         >{{ t.label }}</option>
       </select>
-      <input v-else class="predicate" placeholder="请输入谓项" :value="predicate" @input="(e: any) => predicate = e.target.value" />
+      <input v-else class="predicate" :placeholder="i18n.predicate" :value="predicate" @input="(e: any) => predicate = e.target.value" />
     </td>
   </tr>
 </template>
 
 <script lang="ts" setup>
+import { i18n } from '@/shared/translate'
 import { type Proposition, type PropositionType } from '@/shared/syllogism'
 
 const props = defineProps<{
@@ -82,15 +83,15 @@ type InputCopulaType = 'is' | 'isnot'
 
 const quantifiers = [
   {
-    label: '所有的',
+    label: i18n.value.all,
     value: 'all',
   },
   {
-    label: '没有',
+    label: i18n.value.no,
     value: 'no',
   },
   {
-    label: '有',
+    label: i18n.value.some,
     value: 'some',
   },
 ] as Array<{ label: string, value: InputQuantifierType }>
@@ -193,7 +194,7 @@ let conclusionTerms = $computed(() => {
     disabled: false,
   })) : [
     {
-      label: '请正确输入前提',
+      label: i18n.value.premiseFirst,
       value: '__noop',
       disabled: true,
     }
@@ -205,11 +206,11 @@ let qualities = $computed(() => {
     copula = 'is'
     return [
       {
-        label: quantifier === 'all' ? '都是' :'是',
+        label: quantifier === 'all' ? i18n.value.allis : i18n.value.is,
         value: 'is',
       },
       {
-        label: '不是',
+        label: i18n.value.isnot,
         value: 'isnot',
         disabled: true,
       }
@@ -217,11 +218,11 @@ let qualities = $computed(() => {
   }
   return [
     {
-      label: '是',
+      label: i18n.value.is,
       value: 'is',
     },
     {
-      label: '不是',
+      label: i18n.value.isnot,
       value: 'isnot',
     }
   ]

@@ -3,8 +3,8 @@
     <div class="inner">
       <div class="left">
         <div class="title">
-          <h3>{{ editing ? '输入直言三段论' : '验证直言三段论' }}</h3>
-          <button v-if="!editing" class="text-button" @click="editing = true">输入直言三段论</button>
+          <h3>{{ editing ? i18n.modifySyllogism : i18n.validateSyllogism }}</h3>
+          <button v-if="!editing" class="text-button" @click="editing = true">{{ i18n.modify }}</button>
         </div>
         <argument-input
           v-if="editing"
@@ -25,6 +25,7 @@
 </template>
 
 <script lang="ts">
+import { i18n } from '@/shared/translate'
 import type { Argument, Mood } from '@/shared/syllogism'
 import ArgumentInput from '@/components/argument-input.vue'
 import ArgumentShow from '@/components/argument-show.vue'
@@ -79,7 +80,7 @@ watch($$(argument), (l) => {
 
 .title {
   margin-bottom: 40px;
-  font-size: 30px;
+  font-size: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <header>
-      <h2>Categorical Syllogism</h2>
+      <h2>{{ i18n.title }}</h2>
       <div class="nav">
         <a
           v-for="m in menus"
@@ -11,7 +11,9 @@
         >{{ m.text }}</a>
       </div>
       <div class="space"></div>
-      <div class="language">English</div>
+      <a class="language" @click="language = (language === 'en' ? 'zh' : 'en')">
+        {{ language === 'en' ? '中文' : 'English' }}
+      </a>
     </header>
     <main>
       <router-view />
@@ -20,12 +22,11 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { language, i18n } from '@/shared/translate'
 
 const route = useRoute()
 const router = useRouter()
-
 
 let active = $computed({
   get: () => route.path.split('/')[1],
@@ -34,20 +35,24 @@ let active = $computed({
   }
 })
 
-const menus = [
-  {
-    link: 'validate',
-    text: 'Validate',
-  },
-  {
-    link: 'fallacies',
-    text: 'Fallacies',
-  },
-  {
-    link: 'forms',
-    text: 'Forms',
-  },
-]
+let menus = $computed(() => {
+  const isEn = language.value === 'en'
+  return [
+    {
+      link: 'validate',
+      text: isEn ? 'Validate' : '验证',
+    },
+    // {
+    //   link: 'fallacies',
+    //   text: isEn ? 'Fallacies' : '谬误',
+    // },
+    // {
+    //   link: 'forms',
+    //   text: isEn ? 'Forms' : '形式',
+    // },
+  ]
+
+})
 
 </script>
 
@@ -87,6 +92,10 @@ header {
       color: #ed5ca3;
     }
   }
+}
+
+.language {
+  cursor: pointer;
 }
 
 main {

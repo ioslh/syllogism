@@ -11,6 +11,10 @@ const routes = [
     component: Layout,
     children: [
       {
+        path: '',
+        redirect: '/validate',
+      },
+      {
         path: 'validate',
         component: Validate,
       },

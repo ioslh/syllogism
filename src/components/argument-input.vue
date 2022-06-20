@@ -22,7 +22,7 @@
       </tbody>
     </table>
     <div class="control">
-      <button @click="onSubmit">验证</button>
+      <button @click="onSubmit">{{ i18n.validate }}</button>
     </div>
     <div class="error" v-if="err">
       {{ reasons[err] }}
@@ -34,6 +34,7 @@
 import { type Proposition, type PropositionType, type Argument, type Mood } from '@/shared/syllogism'
 import PropositionInput from './proposition-input.vue'
 import { onMounted } from 'vue'
+import { i18n } from '@/shared/translate'
 
 const props = defineProps<{
   argument: Argument
