@@ -31,18 +31,18 @@ const qualityText = $computed(() => {
 })
 
 const majorStyle = {
-  color: 'rgb(88, 100, 255)',
-  background: '#e4e4fc'
+  color: 'rgb(182 36 86 / 58%)',
+  background: '#fde0e0'
 }
 
 const minorStyle = {
-  color: '#f46e77',
-  background: '#fbd8d8',
+  color: 'rgb(244 152 110)',
+  background: '#cccccc85',
 }
 
 const middleStyle = {
-  color: '#438a11',
-  background: '#cef5ce'
+  color: '#6b60bb',
+  background: 'rgb(221 206 217)'
 }
 
 const styles = {

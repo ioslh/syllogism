@@ -310,7 +310,7 @@ const onChangeConclusionPredicate = (e: any) => {
 
 .subject, .predicate {
   font-weight: bold;
-  color: #43b92e;
+  color: #813810;
 }
 
 

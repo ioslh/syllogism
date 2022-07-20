@@ -21,11 +21,12 @@
         <argument-struct v-else :argument="argument" />
       </div>
     </div>
+    <footer class="footer">{{ i18n.code}} | {{ i18n.reference }}</footer>
   </div>
 </template>
 
 <script lang="ts">
-import { i18n } from '@/shared/translate'
+import { i18n,language } from '@/shared/translate'
 import type { Argument, Mood } from '@/shared/syllogism'
 import ArgumentInput from '@/components/argument-input.vue'
 import ArgumentShow from '@/components/argument-show.vue'
@@ -65,6 +66,21 @@ watch($$(argument), (l) => {
   localStorage.setItem(key, JSON.stringify(l))
 }, { deep: true })
 
+let menus = $computed(() => {
+  const isEn = language.value === 'en'
+  return [
+    {
+      link: 'code',
+      text: isEn ? 'code' : '代码',
+    },
+    {
+      link: 'reference',
+      text: isEn ? 'reference' : '参考',
+    },
+  ]
+
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -75,7 +91,6 @@ watch($$(argument), (l) => {
   margin: auto;
   height: 100%;
   padding-top: 50px;
-
 }
 
 .title {
@@ -126,4 +141,16 @@ watch($$(argument), (l) => {
   border-left: 1px solid #ccc;
   padding-left: 40px;
 }
+.footer{
+  position: fixed;
+  width: 150px;
+  bottom: 0;
+  left: 50%;
+  margin-left: -50px;
+  margin-bottom: 20px;
+  text-align: center;
+  color:darkgray;
+}
+
+
 </style>

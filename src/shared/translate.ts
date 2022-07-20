@@ -37,6 +37,8 @@ const i18nText = {
     premiseFirst: '请正确输入前提',
     validForms: '有效的三段论格式',
     close: '关闭',
+    code:'代码',
+    reference:'参考'
   },
   en: {
     title: "Categorical Syllogism",
@@ -74,6 +76,8 @@ const i18nText = {
     premiseFirst: 'Finish premise first',
     validForms: 'Valid syllogism forms',
     close: 'CLOSE',
+    code:'Code',
+    reference:'Reference'
   }
 } as Record<string, Record<string, string>>
 
