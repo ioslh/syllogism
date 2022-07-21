@@ -20,6 +20,7 @@
       <all-syllogisms v-model:active="activeFallacy" />
     </div>
   </div>
+  
 </template>
 
 <script lang="ts" setup>
