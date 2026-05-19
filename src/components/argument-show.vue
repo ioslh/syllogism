@@ -1,6 +1,6 @@
 <template>
-  <div class="argument">
-    <div class="premises">
+  <div class="rounded-lg border bg-card p-6 space-y-4">
+    <div class="space-y-2">
       <proposition-view
         :propsition="majorTerm"
         :subject-role="[1, 3].includes(arg.figure) ? TERM_ROLE.MIDDLE : TERM_ROLE.MAJOR"
@@ -12,87 +12,43 @@
         :predicate-role="[1, 2].includes(arg.figure) ? TERM_ROLE.MIDDLE : TERM_ROLE.MINOR"
       />
     </div>
-    <hr>
-    <div class="conclusion">
-      <proposition-view
-        :propsition="conclusionTerm"
-        :subject-role="TERM_ROLE.MINOR"
-        :predicate-role="TERM_ROLE.MAJOR"
-      />
-    </div>
+    <div class="h-px bg-border" />
+    <proposition-view
+      :propsition="conclusionTerm"
+      :subject-role="TERM_ROLE.MINOR"
+      :predicate-role="TERM_ROLE.MAJOR"
+    />
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+import { computed } from 'vue'
 import type { Argument, PropositionType, Proposition } from '@/shared/syllogism'
 import { TERM_ROLE } from '@/shared/syllogism'
 import PropositionView from './proposition.vue'
 
-const props = defineProps<{
-  argument: Argument
-}>()
+const props = defineProps<{ argument: Argument }>()
+const arg = computed(() => props.argument)
 
-let arg = $computed(() => props.argument)
+const majorType = computed<PropositionType>(() => arg.value.mood[0] as PropositionType)
+const minorType = computed<PropositionType>(() => arg.value.mood[1] as PropositionType)
+const conclusionType = computed<PropositionType>(() => arg.value.mood[2] as PropositionType)
 
-let majorType = $computed<PropositionType>(() => arg.mood[0] as PropositionType)
-let minorType = $computed<PropositionType>(() => arg.mood[1] as PropositionType)
-let conclusionType = $computed<PropositionType>(() => arg.mood[2] as PropositionType)
+const majorTerm = computed<Proposition>(() => ({
+  mood: majorType.value,
+  subject: [1, 3].includes(arg.value.figure) ? arg.value.middle : arg.value.major,
+  predicate: [1, 3].includes(arg.value.figure) ? arg.value.major : arg.value.middle,
+}))
 
-const majorTerm = $computed<Proposition>(() => {
-  return {
-    mood: majorType,
-    subject: [1, 3].includes(arg.figure) ? arg.middle : arg.major,
-    predicate: [1, 3].includes(arg.figure) ? arg.major : arg.middle,
-  }
-})
+const minorTerm = computed<Proposition>(() => ({
+  mood: minorType.value,
+  subject: [1, 2].includes(arg.value.figure) ? arg.value.minor : arg.value.middle,
+  predicate: [1, 2].includes(arg.value.figure) ? arg.value.middle : arg.value.minor,
+}))
 
-const minorTerm = $computed<Proposition>(() => {
-  return {
-    mood: minorType,
-    subject: [1, 2].includes(arg.figure) ? arg.minor : arg.middle,
-    predicate: [1, 2].includes(arg.figure) ? arg.middle : arg.minor,
-  }
-})
-
-const conclusionTerm = $computed<Proposition>(() => {
-  return {
-    mood: conclusionType,
-    predicate: arg.major,
-    subject: arg.minor,
-  }
-})
+const conclusionTerm = computed<Proposition>(() => ({
+  mood: conclusionType.value,
+  predicate: arg.value.major,
+  subject: arg.value.minor,
+}))
 </script>
-
-
-<style scoped lang="scss">
-hr {
-  border-color: #ccc;
-}
-.premises, .conclusion {
-  position: relative;
-  padding: 10px 40px;
-  &::before {
-    display: block;
-    position: absolute;
-    top: 5px;
-    left: 0;
-    font-size: 40px;
-    color: #888;
-  }
-}
-
-.premises {
-  & > div:first-child {
-    margin-bottom: 10px;
-  }
-  &::before {
-    content: '∵';
-  }
-}
-
-.conclusion {
-  &::before {
-    content: '∴';
-  }
-}
-</style>

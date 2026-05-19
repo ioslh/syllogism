@@ -1,156 +1,89 @@
 <template>
-  <div class="validate">
-    <div class="inner">
-      <div class="left">
-        <div class="title">
-          <h3>{{ editing ? i18n.modifySyllogism : i18n.validateSyllogism }}</h3>
-          <button v-if="!editing" class="text-button" @click="editing = true">{{ i18n.modify }}</button>
+  <div class="container max-w-5xl py-8 px-6">
+    <div class="flex items-start gap-8">
+      <!-- Left: Syllogism input/display -->
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">
+              {{ editing ? i18n.modifySyllogism : i18n.validateSyllogism }}
+            </h1>
+            <p class="text-sm text-muted-foreground mt-1">{{ i18n.subtitle }}</p>
+          </div>
+          <button
+            v-if="!editing"
+            @click="editing = true"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="m18.5 2.5 2 2-10 10-3 1 1-3 10-10z"/>
+            </svg>
+            {{ i18n.modify }}
+          </button>
         </div>
+
         <argument-input
           v-if="editing"
           :argument="argument"
           @update:argument="onArgumentInput"
         />
-        <div v-else>
+        <div v-else class="space-y-6">
           <argument-show :argument="argument" />
           <argument-validation :argument="argument" />
         </div>
       </div>
-      <div class="right">
-        <div v-if="editing" class="tip">结论中的主项和谓项必须来自前提。两个前提输入完成后，结论中的词项只需选择即可</div>
+
+      <!-- Right: Structure panel -->
+      <div class="w-72 shrink-0">
+        <div v-if="editing" class="rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground leading-relaxed">
+          <p class="font-medium text-foreground mb-2">{{ language === 'zh' ? '提示' : 'Tip' }}</p>
+          {{ language === 'zh'
+            ? '结论中的主项和谓项必须来自前提。两个前提输入完成后，结论中的词项只需选择即可。'
+            : 'The subject and predicate in the conclusion must come from the premises. Once both premises are filled in, you can simply select the conclusion terms.' }}
+        </div>
         <argument-struct v-else :argument="argument" />
       </div>
     </div>
-    <footer class="footer">{{ i18n.code}} | {{ i18n.reference }}</footer>
   </div>
 </template>
 
-<script lang="ts">
-import { i18n,language } from '@/shared/translate'
-import type { Argument, Mood } from '@/shared/syllogism'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { i18n, language } from '@/shared/translate'
+import type { Argument } from '@/shared/syllogism'
 import ArgumentInput from '@/components/argument-input.vue'
 import ArgumentShow from '@/components/argument-show.vue'
 import ArgumentStruct from '@/components/argument-struct.vue'
 import ArgumentValidation from '@/components/argument-validation.vue'
 
-const tpl = {
+const tpl: Argument = {
   major: '必死的',
   minor: '希腊人',
   middle: '人',
   mood: ['A', 'A', 'A'],
   figure: 1,
-} as Argument
+}
+
 const key = 'LOCAL_ARGUMENT'
-const getStorageArgument = () => {
+const getStorageArgument = (): Argument => {
   const ls = localStorage.getItem(key)
   try {
     return ls ? JSON.parse(ls) : tpl
-  } catch(e) {
+  } catch {
     return tpl
   }
 }
-</script>
 
-<script lang="ts" setup>
-import { watch } from 'vue'
-
-let editing = $ref(false)
-let argument = $ref<Argument>(getStorageArgument())
+const editing = ref(false)
+const argument = ref<Argument>(getStorageArgument())
 
 const onArgumentInput = (arg: Argument) => {
-  editing = false
-  argument = arg
+  editing.value = false
+  argument.value = arg
 }
 
-watch($$(argument), (l) => {
+watch(argument, (l) => {
   localStorage.setItem(key, JSON.stringify(l))
 }, { deep: true })
-
-let menus = $computed(() => {
-  const isEn = language.value === 'en'
-  return [
-    {
-      link: 'code',
-      text: isEn ? 'code' : '代码',
-    },
-    {
-      link: 'reference',
-      text: isEn ? 'reference' : '参考',
-    },
-  ]
-
-})
-
 </script>
-
-<style lang="scss" scoped>
-.validate {
-  width: 80%;
-  min-width: 800px;
-  max-width: 1200px;
-  margin: auto;
-  height: 100%;
-  padding-top: 50px;
-}
-
-.title {
-  margin-bottom: 40px;
-  font-size: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  h3 {
-
-  }
-}
-
-.inner {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.left {
-  padding-right: 40px;
-  width: 600px;
-  flex: 1;
-}
-
-.text-button {
-  border: none;
-  outline: none;
-  background-color: #2080f0;
-  font-size: 14px;
-  cursor: pointer;
-  color: #fff;
-  padding: 0 6px;
-  height: 26px;
-  border-radius: 2px;
-  transition: background-color .3s;
-  &:hover {
-    background-color: #4098fc;
-  }
-  &:active, &:focus {
-    background-color: #1060c9;
-  }
-}
-
-.right {
-  flex: 300px 0 0;
-  min-height: 200px;
-  border-left: 1px solid #ccc;
-  padding-left: 40px;
-}
-.footer{
-  position: fixed;
-  width: 150px;
-  bottom: 0;
-  left: 50%;
-  margin-left: -50px;
-  margin-bottom: 20px;
-  text-align: center;
-  color:darkgray;
-}
-
-
-</style>

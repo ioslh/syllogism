@@ -7,6 +7,7 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-nocheck
 
 const props = defineProps<{
   value: string

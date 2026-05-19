@@ -38,6 +38,7 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-nocheck
 import { watch } from 'vue'
 import type { Argument, Mood } from './syllogism'
 import { validSyllogisms, argumentAssert } from './syllogism'

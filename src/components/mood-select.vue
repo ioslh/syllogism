@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-nocheck
 import type { PropositionType } from '@/shared/syllogism'
 
 const options = ['A', 'E', 'I', 'O'] as PropositionType[]

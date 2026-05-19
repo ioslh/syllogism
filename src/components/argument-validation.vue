@@ -1,48 +1,62 @@
 <template>
-  <div class="validation" :class="validName ? 'valid' : 'invalid'">
-    <div class="overview">
-      <span class="form">{{ form }}{{ i18n.colon }}</span>
-      <span v-if="validName" class="name">{{ validName }}{{ i18n.comma }}</span>
-      <span v-if="validName">{{ i18n.valid }}</span>
-      <span v-else>{{ i18n.invalid }}</span>
+  <div
+    class="rounded-lg border p-5 animate-fade-in"
+    :class="validName
+      ? 'border-green-300 bg-green-50'
+      : 'border-red-300 bg-red-50'"
+  >
+    <div class="flex items-center gap-3 mb-1">
+      <span class="font-mono font-bold text-base" :class="validName ? 'text-green-700' : 'text-red-700'">
+        {{ form }}
+      </span>
+      <span v-if="validName" class="text-sm font-semibold text-green-700">{{ validName }}</span>
+      <span class="text-sm" :class="validName ? 'text-green-800' : 'text-red-800'">
+        {{ validName ? i18n.valid : i18n.invalid }}
+      </span>
+      <div class="ml-auto">
+        <span
+          class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
+          :class="validName ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+        >
+          {{ validName ? (language === 'zh' ? '✓ 有效' : '✓ Valid') : (language === 'zh' ? '✗ 无效' : '✗ Invalid') }}
+        </span>
+      </div>
     </div>
-    <div class="fallacies" v-if="fallacies.length">
-      <p>{{ i18n.commitFallacies }}{{ i18n.colon }}</p>
-      <ol>
-        <li v-for="f in fallacies" :key="f.name">
-          <h5>{{ f.name }}</h5>
-          <p>{{ f.detail }}</p>
+
+    <div v-if="fallacies.length" class="mt-4 space-y-3">
+      <p class="text-sm font-medium text-red-700">{{ i18n.commitFallacies }}{{ i18n.colon }}</p>
+      <ol class="space-y-3 pl-4">
+        <li v-for="f in fallacies" :key="f.name" class="list-decimal">
+          <h5 class="text-sm font-semibold text-red-800">{{ f.name }}</h5>
+          <p class="text-xs text-red-700/80 mt-1 leading-relaxed">{{ f.detail }}</p>
         </li>
       </ol>
-      <div class="ref">
-        <a target="_blank" :href="i18n.refLink">&lt;&lt;{{ i18n.refBook }}&gt;&gt;</a>
+      <div class="text-right pt-2">
+        <a :href="i18n.refLink" target="_blank" class="text-xs text-muted-foreground hover:text-foreground underline">
+          《{{ i18n.refBook }}》
+        </a>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { i18n } from '@/shared/translate'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { i18n, language } from '@/shared/translate'
 import type { Argument, Mood } from '@/shared/syllogism'
 import { validSyllogisms, argumentAssert, fallacyExplains } from '@/shared/syllogism'
 
-const props = defineProps<{
-  argument: Argument
-}>()
+const props = defineProps<{ argument: Argument }>()
 
-const form = $computed(() => {
-  const mood = props.argument.mood.join('').toUpperCase()
-  return `${mood}-${props.argument.figure}`
+const form = computed(() => `${props.argument.mood.join('').toUpperCase()}-${props.argument.figure}`)
+
+const validName = computed<string | undefined>(() => {
+  const found = validSyllogisms.find(s => s.form === form.value)
+  return found?.name
 })
 
-const validName = $computed<string | undefined>(() => {
-  const found = validSyllogisms.find(s => s.form === form)
-  return found ? found.name : undefined
-})
-
-
-let fallacies = $computed(() => {
-  const text: { name: string, detail: string }[] = []
+const fallacies = computed(() => {
+  const text: { name: string; detail: string }[] = []
   const m = props.argument.mood.join('') as Mood
   argumentAssert.forEach(({ fn, key }) => {
     if (fn(m, props.argument.figure)) {
@@ -52,55 +66,3 @@ let fallacies = $computed(() => {
   return text
 })
 </script>
-
-<style lang="scss" scoped>
-.validation {
-  margin-top: 60px;
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 6px;
-  .form {
-    font-weight: bold;
-  }
-  &.valid {
-    border-color: #297d08;
-    background: #eeffee;
-    .form {
-      color: #297d08;
-    }
-  }
-
-  &.invalid {
-    border-color: #ba0000;
-    background: #ffeaea;
-    .form {
-      color: #ba0000;
-    }
-  }
-}
-
-.fallacies {
-  margin-top: 20px;
-  ol {
-    padding-left: 20px;
-    li {
-      margin: 20px 0;
-    }
-    h5 {
-      font-size: 16px;
-    }
-    p {
-      font-size: 14px;
-      color: #666;
-      margin-top: 10px;
-    }
-  }
-}
-
-.ref {
-  text-align: right;
-  a {
-    color: #4d65ab;
-  }
-}
-</style>
