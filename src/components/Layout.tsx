@@ -1,4 +1,5 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useLanguage } from '@/shared/LanguageContext'
 import { cn } from '@/lib/utils'
 
@@ -12,6 +13,19 @@ export default function Layout() {
   const navigate = useNavigate()
   const location = useLocation()
   const activeSegment = location.pathname.split('/')[1]
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
+
+  useEffect(() => {
+    const pageTitles: Record<string, { zh: string; en: string }> = {
+      validate: { zh: '直言三段论 - 验证', en: 'Categorical Syllogism - Validate' },
+      fallacies: { zh: '直言三段论 - 谬误', en: 'Categorical Syllogism - Fallacies' },
+    }
+    const titles = pageTitles[activeSegment]
+    document.title = titles ? titles[lang] : (lang === 'zh' ? '直言三段论' : 'Categorical Syllogism')
+  }, [lang, activeSegment])
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

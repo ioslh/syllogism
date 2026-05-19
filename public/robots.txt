@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://syllogism.ioslh.workers.dev/sitemap.xml
