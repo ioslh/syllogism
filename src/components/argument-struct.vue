@@ -1,129 +1,76 @@
 <template>
-  <table class="form">
-    <tbody>
-      <tr>
-        <td>{{ i18n.major }}</td>
-        <td><text-input v-model:value="argument.major" /></td>
-      </tr>
-      <tr>
-        <td>{{ i18n.minor }}</td>
-        <td><text-input v-model:value="argument.minor" /></td>
-      </tr>
-      <tr>
-        <td>{{ i18n.middle }}</td>
-        <td><text-input v-model:value="argument.middle" /></td>
-      </tr>
-      <tr>
-        <td>{{ i18n.mood }}</td>
-        <td>
-          <div class="moods">
-            <mood-select v-model:value="argument.mood" />
-            <!-- <el-select v-model="argument.mood[0]" size="small">
-              <el-option
-                v-for="m in moodOptions"
-                :key="m"
-                :label="m"
-                :value="m"
-              />
-            </el-select>
-            <el-select v-model="argument.mood[1]" size="small">
-              <el-option
-                v-for="m in moodOptions"
-                :key="m"
-                :label="m"
-                :value="m"
-              />
-            </el-select>
-            <el-select v-model="argument.mood[2]" size="small">
-              <el-option
-                v-for="m in moodOptions"
-                :key="m"
-                :label="m"
-                :value="m"
-              />
-            </el-select> -->
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>{{ i18n.figure }}</td>
-        <td>
-          <div class="figures">
-            <span
-              v-for="f in figures"
-              :key="f.value"
-              @click="props.argument.figure = f.value"
-              :class="{ active: f.value === props.argument.figure }"
-            >{{ f.label }}</span>
-          </div>
-          <!-- <el-radio-group v-model="argument.figure">
-            <el-radio-button v-for="item in figures" :key="item.label" :label="item.value">
-              {{ item.label }}
-            </el-radio-button>
-          </el-radio-group> -->
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="rounded-lg border bg-card p-4 space-y-3">
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+      {{ language === 'zh' ? '结构' : 'Structure' }}
+    </h3>
+    <div class="space-y-2">
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-muted-foreground w-12">{{ i18n.major }}</span>
+        <input
+          class="flex-1 h-8 px-2 text-sm rounded border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          :value="argument.major"
+          @input="(e) => argument.major = (e.target as HTMLInputElement).value"
+        />
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-muted-foreground w-12">{{ i18n.minor }}</span>
+        <input
+          class="flex-1 h-8 px-2 text-sm rounded border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          :value="argument.minor"
+          @input="(e) => argument.minor = (e.target as HTMLInputElement).value"
+        />
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-muted-foreground w-12">{{ i18n.middle }}</span>
+        <input
+          class="flex-1 h-8 px-2 text-sm rounded border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          :value="argument.middle"
+          @input="(e) => argument.middle = (e.target as HTMLInputElement).value"
+        />
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-muted-foreground w-12">{{ i18n.mood }}</span>
+        <div class="flex gap-1">
+          <select
+            v-for="(m, idx) in argument.mood"
+            :key="idx"
+            :value="m"
+            @change="(e) => { const next = [...argument.mood] as [any,any,any]; next[idx] = (e.target as HTMLSelectElement).value; argument.mood = next }"
+            class="h-8 px-1 text-sm font-mono rounded border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            <option v-for="opt in ['A','E','I','O']" :key="opt" :value="opt" :selected="opt === m">{{ opt }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-muted-foreground w-12">{{ i18n.figure }}</span>
+        <div class="flex gap-1">
+          <button
+            v-for="f in figures"
+            :key="f.value"
+            @click="argument.figure = f.value"
+            class="h-8 px-3 text-sm rounded border transition-colors"
+            :class="f.value === argument.figure
+              ? 'bg-primary text-primary-foreground border-primary'
+              : 'border-input bg-background text-foreground hover:bg-muted'"
+          >{{ f.label }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { defineComponent, ref, watch } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import type { Argument, Figure } from '@/shared/syllogism'
-import { i18n } from '@/shared/translate'
-import TextInput from '@/components/text-input.vue'
-import MoodSelect from '@/components/mood-select.vue'
+import { i18n, language } from '@/shared/translate'
 
-const props = defineProps<{
-  argument: Argument
-}>()
+const props = defineProps<{ argument: Argument }>()
 
-
-const figures = $computed(() => {
-  return [1, 2, 3, 4].map((t, i) => ({
+const figures = computed(() => {
+  return [1, 2, 3, 4].map((t) => ({
     label: i18n.value[`figure${t}`],
     value: t as Figure,
   }))
 })
-
-const moodOptions = ['A', 'E', 'I', 'O']
-
-
-
 </script>
-
-<style lang="scss" scoped>
-.form {
-  td {
-    padding: 4px 2px;
-  }
-  td:first-child {
-    word-break: keep-all;
-    white-space: nowrap;
-    color: #888;
-    font-size: 14px;
-  }
-}
-
-.figures {
-  display: flex;
-  border-radius: 2px;
-  overflow: hidden;
-  border: 1px solid #eee;
-  span {
-    flex: 1;
-    text-align: center;
-    cursor: pointer;
-    padding: 0 4px;
-    border-right: 1px solid #eee;
-    &:last-child {
-      border-right: none;
-    }
-    &.active {
-      background: blue;
-      color: #fff;
-    }
-  }
-}
-
-</style>
