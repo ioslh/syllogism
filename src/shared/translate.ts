@@ -1,6 +1,4 @@
-import { computed, ref, watch } from 'vue'
-
-const i18nText = {
+export const i18nText = {
   zh: {
     title: "直言三段论",
     subtitle: '验证，生成，解释',
@@ -37,8 +35,8 @@ const i18nText = {
     premiseFirst: '请正确输入前提',
     validForms: '有效的三段论格式',
     close: '关闭',
-    code:'代码',
-    reference:'参考'
+    code: '代码',
+    reference: '参考',
   },
   en: {
     title: "Categorical Syllogism",
@@ -76,20 +74,9 @@ const i18nText = {
     premiseFirst: 'Finish premise first',
     validForms: 'Valid syllogism forms',
     close: 'CLOSE',
-    code:'Code',
-    reference:'Reference'
-  }
+    code: 'Code',
+    reference: 'Reference',
+  },
 } as Record<string, Record<string, string>>
 
-const key = 'SYLLOGISM_LANG'
-const getInitLanguage = (): string => {
-  let l = localStorage.getItem(key) as string
-  return ['zh', 'en'].includes(l) ? l : 'zh'
-}
-
-export const language = ref(getInitLanguage())
-watch(language, v => {
-  localStorage.setItem(key, v)
-})
-
-export const i18n = computed(() => i18nText[language.value])
+export type I18nKey = keyof typeof i18nText['zh']
