@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "bun run build && wrangler deploy",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -20,7 +20,6 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@cloudflare/kv-asset-handler": "^0.5.0",
     "@tailwindcss/vite": "^4.1.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.2.14",
